@@ -3,96 +3,112 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MedSchoolPrep | The Ultimate MCAT & Admissions App</title>
+  <title>MedSchoolPrep | The Ultimate Premed AI</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    .fade-up {
+    /* ── ADVANCED FADE ANIMATIONS ── */
+    .reveal-up {
       opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(50px) scale(0.98);
+      transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .fade-up.visible { opacity: 1; transform: translateY(0); }
-    .text-glow { text-shadow: 0 0 25px rgba(59, 130, 246, 0.6); }
-    .bg-gradient-dark {
-      background: radial-gradient(circle at top right, rgba(30, 64, 175, 0.15), transparent 40%),
-                  radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.1), transparent 40%);
+    .reveal-up.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    
+    /* Delay classes for staggered grid reveals */
+    .delay-100 { transition-delay: 100ms; }
+    .delay-200 { transition-delay: 200ms; }
+    .delay-300 { transition-delay: 300ms; }
+
+    .text-glow { text-shadow: 0 0 30px rgba(59, 130, 246, 0.5); }
+    .bg-radial-glow {
+      background: radial-gradient(circle at 50% 0%, rgba(37,99,235,0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 100% 100%, rgba(16,185,129,0.1) 0%, transparent 40%);
     }
   </style>
 </head>
-<body class="font-sans text-gray-300 antialiased overflow-x-hidden bg-gray-950 bg-gradient-dark selection:bg-blue-500/30">
+<body class="font-sans text-gray-300 antialiased overflow-x-hidden bg-gray-950 bg-radial-glow selection:bg-blue-500/30">
 
-  <nav class="fixed w-full z-50 bg-gray-950/80 backdrop-blur-xl border-b border-gray-800 transition-all duration-300">
+  <nav class="fixed w-full z-50 bg-gray-950/70 backdrop-blur-2xl border-b border-gray-800/50 transition-all duration-300">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
       <div class="flex items-center gap-3 text-white font-bold text-xl tracking-tight">
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center text-sm shadow-[0_0_15px_rgba(59,130,246,0.5)]">M</div>
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center text-sm shadow-[0_0_20px_rgba(59,130,246,0.4)]">M</div>
         MedSchoolPrep
       </div>
       <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-400">
-        <a href="#features" class="hover:text-white transition-colors">Features</a>
-        <a href="#toolkit" class="hover:text-white transition-colors">Toolkit</a>
+        <a href="#features" class="hover:text-white transition-colors">The Toolkit</a>
+        <a href="#method" class="hover:text-white transition-colors">Methodology</a>
       </div>
       <div>
-        <a href="/src/main.jsx" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(37,99,235,0.4)]">
-          Launch App
+        <a href="/src/main.jsx" class="px-6 py-2.5 bg-white text-black text-sm font-bold rounded-full transition-transform hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+          Open App
         </a>
       </div>
     </div>
   </nav>
 
-  <header class="relative pt-40 pb-24 overflow-hidden">
-    <div class="relative max-w-5xl mx-auto px-6 text-center z-10 fade-up">
-      <h1 class="text-5xl md:text-7xl font-extrabold text-white tracking-tight leading-tight mb-6 text-glow">
-        Build Unstoppable <br />Medical Knowledge.
+  <header class="relative pt-48 pb-32 overflow-hidden flex flex-col items-center justify-center min-h-[90vh]">
+    <div class="relative max-w-5xl mx-auto px-6 text-center z-10 reveal-up">
+      <div class="inline-block mb-6 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-sm font-bold tracking-wide uppercase">
+        Version 2.0 is Live
+      </div>
+      <h1 class="text-6xl md:text-8xl font-extrabold text-white tracking-tight leading-[1.1] mb-8 text-glow">
+        Discipline.<br />Mastery. <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Acceptance.</span>
       </h1>
-      <p class="mt-6 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-        Your personal AI coach for the MCAT, AMCAS essays, and MMI interviews. 200+ hyper-adaptive quizzes, dynamic study plans, and real-time feedback in one premium web app.
+      <p class="text-lg md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed mb-12">
+        We replaced traditional textbooks with 200+ hyper-adaptive quizzes, AMCAS auto-drafting, and strict study schedules. 
       </p>
-      <div class="mt-10 flex justify-center">
-        <a href="/src/main.jsx" class="w-64 h-16 bg-white text-black font-extrabold text-lg rounded-2xl hover:bg-gray-200 transition-all flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(255,255,255,0.15)] hover:scale-105">
-          Start Studying Now →
+      <div class="flex justify-center gap-4 reveal-up delay-200">
+        <a href="/src/main.jsx" class="w-64 h-16 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-extrabold text-lg rounded-2xl hover:brightness-110 transition-all flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(37,99,235,0.3)] hover:-translate-y-1">
+          Start Training
         </a>
       </div>
     </div>
   </header>
 
-  <section id="features" class="py-24 bg-gray-900 border-t border-gray-800">
+  <section id="features" class="py-32 relative border-t border-gray-800/50">
     <div class="max-w-7xl mx-auto px-6">
-      <div class="text-center mb-16 fade-up">
-        <h2 class="text-4xl font-bold text-white mb-4">The Premed Toolkit</h2>
-        <p class="text-gray-400 text-lg">We didn't just build a chatbot. We built the exact software infrastructure you need to get accepted.</p>
+      <div class="text-center mb-20 reveal-up">
+        <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">A complete system overhaul.</h2>
+        <p class="text-gray-400 text-xl max-w-2xl mx-auto">Everything you need to dominate the MCAT and secure your white coat, housed in one relentless engine.</p>
       </div>
 
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="bg-gray-950 border border-gray-800 p-8 rounded-3xl fade-up hover:border-blue-500/50 transition-all">
-          <div class="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-xl flex items-center justify-center text-2xl mb-6">🧠</div>
-          <h3 class="text-xl font-bold text-white mb-3">200+ Mastery Quizzes</h3>
-          <p class="text-gray-500 leading-relaxed">Over 3,000 high-yield questions across B/B, C/P, P/S, and CARS. Track your accuracy and target weak spots.</p>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="bg-gray-900/50 border border-gray-800 p-10 rounded-[2rem] reveal-up hover:bg-gray-800/80 transition-colors">
+          <div class="w-14 h-14 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center text-3xl mb-8">🧠</div>
+          <h3 class="text-2xl font-bold text-white mb-4">200 Quiz Engine</h3>
+          <p class="text-gray-500 leading-relaxed text-lg">3,000+ mathematically varied questions. We analyzed the MCAT algorithm to ensure extreme answer variation and zero predictability.</p>
         </div>
-        <div class="bg-gray-950 border border-gray-800 p-8 rounded-3xl fade-up hover:border-emerald-500/50 transition-all" style="transition-delay: 100ms;">
-          <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center text-2xl mb-6">📅</div>
-          <h3 class="text-xl font-bold text-white mb-3">Interactive Study Plans</h3>
-          <p class="text-gray-500 leading-relaxed">Stop guessing what to study. Select a 30-day track and get a gamified, day-by-day checklist built directly into the UI.</p>
+        <div class="bg-gray-900/50 border border-gray-800 p-10 rounded-[2rem] reveal-up delay-100 hover:bg-gray-800/80 transition-colors">
+          <div class="w-14 h-14 bg-emerald-500/10 text-emerald-400 rounded-2xl flex items-center justify-center text-3xl mb-8">📅</div>
+          <h3 class="text-2xl font-bold text-white mb-4">Strict Timelines</h3>
+          <p class="text-gray-500 leading-relaxed text-lg">Select a 30-day or 90-day mastery track. Get a day-by-day checklist that forces you to stay disciplined and on target.</p>
         </div>
-        <div class="bg-gray-950 border border-gray-800 p-8 rounded-3xl fade-up hover:border-purple-500/50 transition-all" style="transition-delay: 200ms;">
-          <div class="w-12 h-12 bg-purple-500/10 text-purple-400 rounded-xl flex items-center justify-center text-2xl mb-6">🏥</div>
-          <h3 class="text-xl font-bold text-white mb-3">AMCAS Activity Vault</h3>
-          <p class="text-gray-500 leading-relaxed">Log your messy clinical hours and shadowing notes. Keep everything organized for application season.</p>
+        <div class="bg-gray-900/50 border border-gray-800 p-10 rounded-[2rem] reveal-up delay-200 hover:bg-gray-800/80 transition-colors">
+          <div class="w-14 h-14 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center text-3xl mb-8">🏥</div>
+          <h3 class="text-2xl font-bold text-white mb-4">AMCAS Vault</h3>
+          <p class="text-gray-500 leading-relaxed text-lg">Log your messy clinical hours instantly. Let the system organize your experiences for application season.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <script type="module" src="/src/main.jsx"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const observer = new IntersectionObserver((entries, obs) => {
+    document.addEventListener("DOMContentLoaded", () => {
+      const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            observer.unobserve(entry.target); 
+          }
         });
-      }, { threshold: 0.15 });
-      document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+      }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+      document.querySelectorAll('.reveal-up').forEach(el => observer.observe(el));
     });
   </script>
 </body>
