@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth bg-black">
+<html lang="en" class="scroll-smooth bg-[#030712]">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,220 +10,249 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
     
-    body { font-family: 'Inter', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; }
+    body { font-family: 'Inter', sans-serif; background-color: #030712; color: #F9FAFB; overflow-x: hidden; }
 
-    /* ── Premium Micro-Grid Background ── */
-    .bg-grid {
+    /* ── 1. HULY MICRO-GRID ── */
+    .huly-grid {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
-      background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-                        linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
       background-size: 40px 40px;
-      mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
-      -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 40%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 40%, transparent 100%);
     }
 
-    /* ── Cinematic Spotlights ── */
-    .spotlight-1 { position: absolute; top: -10%; left: 20%; width: 600px; height: 600px; background: rgba(59, 130, 246, 0.15); filter: blur(120px); border-radius: 50%; z-index: -1; animation: pulse 8s infinite alternate; }
-    .spotlight-2 { position: absolute; top: 30%; right: -10%; width: 500px; height: 500px; background: rgba(16, 185, 129, 0.1); filter: blur(100px); border-radius: 50%; z-index: -1; animation: pulse 10s infinite alternate-reverse; }
+    /* ── 2. HULY AMBIENT SPOTLIGHTS ── */
+    .spotlight-blue { position: absolute; top: -10%; left: 15%; width: 600px; height: 600px; background: rgba(37, 99, 235, 0.15); filter: blur(120px); border-radius: 50%; z-index: -1; animation: drift 10s infinite alternate ease-in-out; }
+    .spotlight-emerald { position: absolute; top: 20%; right: -5%; width: 500px; height: 500px; background: rgba(16, 185, 129, 0.12); filter: blur(100px); border-radius: 50%; z-index: -1; animation: drift 12s infinite alternate-reverse ease-in-out; }
+    @keyframes drift { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(40px, 30px) scale(1.1); } }
 
-    @keyframes pulse { 0% { transform: scale(1) translate(0,0); opacity: 0.5; } 100% { transform: scale(1.2) translate(50px, 20px); opacity: 1; } }
-
-    /* ── Smooth Fade & Glide Animations ── */
-    .reveal { opacity: 0; transform: translateY(40px) scale(0.98); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
+    /* ── 3. SMOOTH REVEALS (SCROLL ANIMATION) ── */
+    .reveal { opacity: 0; transform: translateY(30px) scale(0.98); transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
     .reveal.active { opacity: 1; transform: translateY(0) scale(1); }
     .delay-100 { transition-delay: 100ms; } .delay-200 { transition-delay: 200ms; } .delay-300 { transition-delay: 300ms; }
 
-    /* ── 3D Hero Mockup Tilt ── */
+    /* ── 4. HULY 3D HERO MOCKUP ── */
     .perspective-mockup {
-      transform: perspective(1200px) rotateX(10deg) translateY(20px);
-      box-shadow: 0 40px 80px -20px rgba(59, 130, 246, 0.3);
-      transition: transform 0.5s ease;
+      transform: perspective(1200px) rotateX(12deg) translateY(20px) scale(0.95);
+      box-shadow: 0 40px 100px -20px rgba(37, 99, 235, 0.3), 0 0 40px rgba(16, 185, 129, 0.1);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-style: preserve-3d;
     }
-    .perspective-mockup:hover { transform: perspective(1200px) rotateX(0deg) translateY(0px); }
+    .perspective-mockup:hover { transform: perspective(1200px) rotateX(0deg) translateY(0px) scale(1); box-shadow: 0 40px 100px -20px rgba(37, 99, 235, 0.4); }
 
-    /* ── Premium Bento Cards ── */
+    /* ── 5. HULY BENTO BOXES ── */
     .bento-card {
-      background: rgba(15, 15, 15, 0.4);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(17, 24, 39, 0.6); /* Tailwind Gray-900 with opacity */
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 24px;
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
       overflow: hidden;
     }
-    .bento-card::before {
-      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%);
-      opacity: 0; transition: opacity 0.4s ease;
+    .bento-card::after {
+      content: ''; position: absolute; inset: 0; border-radius: 24px; padding: 1px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; opacity: 0; transition: opacity 0.4s ease;
     }
-    .bento-card:hover { border-color: rgba(255, 255, 255, 0.2); transform: translateY(-4px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); }
-    .bento-card:hover::before { opacity: 1; }
+    .bento-card:hover { transform: translateY(-4px); background: rgba(17, 24, 39, 0.8); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.6); }
+    .bento-card:hover::after { opacity: 1; }
   </style>
 </head>
-<body class="antialiased selection:bg-blue-500/30">
+<body class="antialiased">
 
-  <div class="bg-grid"></div>
+  <div class="huly-grid"></div>
 
-  <nav class="fixed w-full z-50 top-0 transition-all duration-300 backdrop-blur-xl bg-black/50 border-b border-white/5">
+  <nav class="fixed w-full z-50 top-0 transition-all duration-300 backdrop-blur-xl bg-[#030712]/70 border-b border-white/5">
     <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
-      <div class="flex items-center gap-3 group cursor-pointer">
-        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-emerald-500 flex items-center justify-center text-white font-extrabold text-sm shadow-[0_0_20px_rgba(59,130,246,0.4)] group-hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] transition-all">M</div>
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center text-white font-extrabold text-sm shadow-[0_0_20px_rgba(59,130,246,0.3)]">M</div>
         <span class="text-white font-bold tracking-tight text-lg">MedSchoolPrep</span>
       </div>
       <div class="hidden md:flex space-x-8 text-sm font-semibold text-gray-400">
-        <a href="#features" class="hover:text-white transition-colors flex items-center gap-1">Product <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></a>
-        <a href="#toolkit" class="hover:text-white transition-colors">Resources</a>
+        <a href="#features" class="hover:text-white transition-colors">The Platform</a>
+        <a href="#methodology" class="hover:text-white transition-colors">Methodology</a>
       </div>
-      <div class="flex items-center gap-6">
-        <a href="/src/main.jsx" class="text-sm font-semibold text-gray-300 hover:text-white transition-colors">Sign In</a>
+      <div class="flex items-center gap-4">
+        <div class="hidden md:flex items-center gap-2 text-xs text-gray-500 font-mono px-3 py-1.5 rounded-lg border border-white/10 bg-white/5">
+          <span>⌘</span><span>K</span>
+        </div>
         <a href="/src/main.jsx" class="px-5 py-2 bg-white text-black text-sm font-bold rounded-full hover:scale-105 transition-transform shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-          Get Started
+          Open Workspace
         </a>
       </div>
     </div>
   </nav>
 
-  <header class="relative pt-40 pb-20 flex flex-col items-center justify-center min-h-screen overflow-hidden">
-    <div class="spotlight-1"></div>
-    <div class="spotlight-2"></div>
+  <header class="relative pt-40 pb-20 flex flex-col items-center justify-center min-h-[95vh] overflow-hidden">
+    <div class="spotlight-blue"></div>
+    <div class="spotlight-emerald"></div>
     
-    <div class="relative max-w-6xl mx-auto px-6 text-center z-10 w-full flex flex-col items-center">
+    <div class="relative max-w-5xl mx-auto px-6 text-center z-10 w-full flex flex-col items-center">
       
-      <a href="#" class="reveal inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/10 text-blue-400 text-xs font-bold tracking-wide uppercase mb-10 hover:bg-blue-500/20 transition-colors cursor-pointer backdrop-blur-md">
-        <span class="w-2 h-2 rounded-full bg-blue-500 animate-ping absolute"></span>
-        <span class="w-2 h-2 rounded-full bg-blue-500 relative"></span>
-        Introducing the 200-Quiz Engine &rarr;
+      <a href="/src/main.jsx" class="reveal inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/10 text-blue-400 text-xs font-bold tracking-wide uppercase mb-8 hover:bg-blue-500/20 transition-colors cursor-pointer backdrop-blur-md">
+        <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+        Version 2.0: The 200-Quiz Engine is Live
       </a>
 
-      <h1 class="reveal delay-100 text-6xl md:text-[90px] font-extrabold tracking-tighter leading-[1.05] mb-8">
-        The complete platform <br class="hidden md:block"/> for <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-emerald-400 to-emerald-200">future doctors.</span>
+      <h1 class="reveal delay-100 text-[3.5rem] md:text-[5.5rem] font-extrabold tracking-tighter leading-[1.05] mb-8 text-white">
+        Everything App <br class="hidden md:block"/> for <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-emerald-400 to-emerald-200">future doctors.</span>
       </h1>
       
-      <p class="reveal delay-200 text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed mb-12 font-medium">
-        MedSchoolPrep is an elite, all-in-one ecosystem that replaces outdated flashcards, messy spreadsheets, and generic AI chatbots with absolute precision.
+      <p class="reveal delay-200 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed mb-12 font-medium">
+        MedSchoolPrep replaces Anki, spreadsheets, and generic AI. A unified workspace featuring 200 hyper-adaptive quizzes, AMCAS logging, and strict study schedules.
       </p>
       
-      <div class="reveal delay-300 flex flex-col sm:flex-row justify-center items-center gap-4 mb-24">
+      <div class="reveal delay-300 flex flex-col sm:flex-row justify-center items-center gap-4 mb-20">
         <a href="/src/main.jsx" class="px-8 py-4 bg-white text-black font-extrabold text-lg rounded-full hover:bg-gray-200 transition-colors flex items-center gap-2">
-          Launch Workspace
+          Start Training
         </a>
-        <div class="flex items-center gap-2 text-sm text-gray-500 font-medium px-4">
-          Press <kbd class="px-2 py-1 bg-white/10 rounded border border-white/20 text-gray-300 font-mono">⌘</kbd> <kbd class="px-2 py-1 bg-white/10 rounded border border-white/20 text-gray-300 font-mono">K</kbd> to explore
-        </div>
       </div>
 
-      <div class="reveal delay-300 w-full max-w-5xl mx-auto perspective-mockup relative">
-        <div class="w-full h-12 bg-[#111] rounded-t-2xl border-t border-x border-white/10 flex items-center px-4 gap-2">
-          <div class="w-3 h-3 rounded-full bg-red-500"></div>
-          <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-          <div class="w-3 h-3 rounded-full bg-green-500"></div>
-          <div class="ml-4 px-3 py-1 bg-white/5 rounded-md text-xs text-gray-400 border border-white/5 flex-1 max-w-sm flex items-center gap-2">
-            <span>🔒</span> medschoolprep.app / workspace
+      <div class="reveal delay-300 w-full max-w-4xl mx-auto perspective-mockup relative">
+        <div class="w-full h-10 bg-[#0B0F19] rounded-t-2xl border-t border-x border-gray-800 flex items-center px-4 gap-2">
+          <div class="w-3 h-3 rounded-full bg-gray-600"></div><div class="w-3 h-3 rounded-full bg-gray-600"></div><div class="w-3 h-3 rounded-full bg-gray-600"></div>
+          <div class="ml-4 px-3 py-1 bg-gray-900 rounded-md text-xs text-gray-500 border border-gray-800 font-mono flex items-center gap-2">
+            medschoolprep.app / workspace
           </div>
         </div>
-        <div class="w-full h-[500px] bg-[#0A0A0A] rounded-b-2xl border-b border-x border-white/10 flex overflow-hidden">
-          <div class="w-64 border-r border-white/5 bg-[#111] p-6 hidden md:block text-left">
-            <div class="text-xs font-bold text-gray-500 tracking-widest uppercase mb-4">Your Workspace</div>
-            <div class="space-y-3">
-              <div class="flex items-center gap-3 text-sm text-white bg-white/5 p-2 rounded-lg border border-white/5"><span class="text-blue-400">🧠</span> Mastery Quizzes</div>
-              <div class="flex items-center gap-3 text-sm text-gray-400 p-2"><span class="text-emerald-400">📅</span> Study Plans</div>
-              <div class="flex items-center gap-3 text-sm text-gray-400 p-2"><span class="text-purple-400">🏥</span> AMCAS Vault</div>
-              <div class="flex items-center gap-3 text-sm text-gray-400 p-2"><span class="text-orange-400">💬</span> AI Coach</div>
+        <div class="w-full h-[450px] bg-[#030712] rounded-b-2xl border-b border-x border-gray-800 flex overflow-hidden text-left shadow-2xl">
+          <div class="w-56 border-r border-gray-800 bg-[#0B0F19] p-5 hidden md:block">
+            <div class="flex items-center gap-2 mb-8">
+              <div class="w-6 h-6 rounded bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center text-[10px] font-bold text-white">M</div>
+              <div class="text-sm font-bold text-white">MedSchoolPrep</div>
+            </div>
+            <div class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-3 pl-2">Curriculum</div>
+            <div class="space-y-1">
+              <div class="flex items-center gap-3 text-xs text-white bg-gray-800 p-2.5 rounded-lg font-semibold"><span class="text-blue-400">🧠</span> Mastery Quizzes</div>
+              <div class="flex items-center gap-3 text-xs text-gray-400 p-2.5 font-semibold"><span class="text-emerald-400">📅</span> Study Plans</div>
+            </div>
+            <div class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-3 pl-2 mt-6">Tools</div>
+            <div class="space-y-1">
+              <div class="flex items-center gap-3 text-xs text-gray-400 p-2.5 font-semibold"><span class="text-orange-400">💬</span> AI Coach</div>
+              <div class="flex items-center gap-3 text-xs text-gray-400 p-2.5 font-semibold"><span class="text-purple-400">🏥</span> AMCAS Vault</div>
             </div>
           </div>
-          <div class="flex-1 p-10 bg-gradient-to-br from-[#0A0A0A] to-[#111] text-left">
-            <div class="flex justify-between items-end mb-8">
-              <div>
-                <h2 class="text-2xl font-bold text-white mb-2">Mastery Engine</h2>
-                <div class="flex gap-2"><span class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-full border border-blue-500/30">All</span><span class="px-3 py-1 bg-white/5 text-gray-400 text-xs rounded-full">Bio/Biochem</span></div>
-              </div>
-              <div class="text-4xl font-extrabold text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]">84% <span class="text-sm text-gray-500 font-normal">Avg</span></div>
+          <div class="flex-1 p-8 relative">
+            <h2 class="text-2xl font-bold text-white mb-2">Mastery Engine</h2>
+            <p class="text-xs text-gray-500 mb-6">200 hyper-adaptive quizzes.</p>
+            <div class="flex gap-2 mb-6">
+              <span class="px-3 py-1 bg-blue-600 text-white text-[10px] font-bold rounded-full">All</span>
+              <span class="px-3 py-1 bg-gray-800 text-gray-400 text-[10px] font-bold rounded-full border border-gray-700">Bio/Biochem</span>
             </div>
             <div class="grid grid-cols-2 gap-4">
-              <div class="bg-[#1A1A1A] p-5 rounded-xl border border-white/5"><div class="text-[10px] text-blue-500 font-bold mb-2 uppercase">Bio/Biochem</div><div class="text-white font-semibold text-sm mb-4">Advanced Metabolism</div><div class="h-1.5 w-full bg-white/10 rounded-full"><div class="h-full bg-emerald-500 rounded-full w-[90%]"></div></div></div>
-              <div class="bg-[#1A1A1A] p-5 rounded-xl border border-white/5"><div class="text-[10px] text-blue-500 font-bold mb-2 uppercase">Chem/Phys</div><div class="text-white font-semibold text-sm mb-4">Organic Mechanisms</div><div class="h-1.5 w-full bg-white/10 rounded-full"><div class="h-full bg-yellow-500 rounded-full w-[60%]"></div></div></div>
+              <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                <div class="text-[9px] text-blue-500 font-bold mb-1 uppercase">Bio/Biochem</div>
+                <div class="text-white font-semibold text-sm mb-4">Advanced Metabolism</div>
+                <div class="flex justify-between items-center"><div class="text-xs text-emerald-400 font-bold">84% Score</div><div class="px-3 py-1 bg-gray-800 text-white text-[10px] rounded border border-gray-700">Retake</div></div>
+              </div>
+              <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                <div class="text-[9px] text-blue-500 font-bold mb-1 uppercase">Chem/Phys</div>
+                <div class="text-white font-semibold text-sm mb-4">Electrochemistry</div>
+                <div class="flex justify-between items-center"><div class="text-xs text-gray-500 font-bold">Not started</div><div class="px-3 py-1 bg-blue-600 text-white text-[10px] rounded">Start</div></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
   </header>
 
-  <section id="features" class="py-32 relative z-10 border-t border-white/5 bg-black">
+  <section id="features" class="py-32 relative z-10 border-t border-white/5 bg-[#030712]">
     <div class="max-w-7xl mx-auto px-6">
       
-      <div class="text-center mb-24 reveal">
-        <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6">Built for top-percentile scorers.</h2>
-        <p class="text-gray-400 text-xl max-w-3xl mx-auto leading-relaxed">A comprehensive study, scheduling, and application management platform built to forge unmatched discipline.</p>
+      <div class="text-center mb-20 reveal">
+        <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6">Unmatched productivity.</h2>
+        <p class="text-gray-400 text-xl max-w-2xl mx-auto leading-relaxed">Everything you need for productive study sessions, strictly confined to one seamless platform.</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-auto">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[auto]">
         
-        <div class="bento-card reveal md:col-span-2 p-10 flex flex-col md:flex-row gap-8 items-center justify-between">
-          <div class="md:w-1/2 z-10">
-            <div class="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-400 text-2xl mb-6">🧠</div>
-            <h3 class="text-2xl font-bold text-white mb-4">Cognitive AI Engine</h3>
-            <p class="text-gray-400 leading-relaxed font-medium">Connect every element of your workflow. Our context-aware AI tracks your exact weak points and automatically generates custom study plans to bridge your knowledge gaps.</p>
+        <div class="bento-card reveal md:col-span-2 p-10 flex flex-col md:flex-row gap-8 items-center justify-between group overflow-hidden">
+          <div class="md:w-1/2 relative z-10">
+            <h3 class="text-2xl font-bold text-white mb-4">The Mastery Engine</h3>
+            <p class="text-gray-400 leading-relaxed text-sm">Over 3,000 mathematically varied MCAT questions. The algorithm strictly enforces Answer Choice Variation (e.g., exactly 4 As, 4 Bs, 3 Cs, 4 Ds) to completely eliminate test-taking predictability.</p>
           </div>
-          <div class="md:w-1/2 w-full bg-[#0A0A0A] border border-white/10 rounded-2xl p-5 shadow-2xl relative z-10">
-            <div class="flex gap-3 mb-4">
-              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-emerald-500 flex-shrink-0"></div>
-              <div class="bg-[#1A1A1A] p-3 rounded-xl rounded-tl-none text-xs text-gray-300 border border-white/5">I noticed you struggled with Organic Mechanisms today. Want me to generate 5 targeted practice questions on SN2 reactions?</div>
+          <div class="md:w-1/2 w-full bg-[#0B0F19] border border-white/10 rounded-2xl p-5 shadow-2xl relative z-10 transform group-hover:-translate-y-2 transition-transform duration-500">
+            <div class="flex justify-between text-[10px] text-gray-500 font-bold uppercase mb-3"><span>Question 14 of 15</span><span class="text-blue-500">Bio/Biochem</span></div>
+            <div class="text-sm font-semibold text-white mb-4 leading-snug">Which enzyme bypasses PFK-1 during gluconeogenesis?</div>
+            <div class="space-y-2">
+              <div class="w-full h-8 rounded-lg bg-gray-800 border border-gray-700 flex items-center px-3 text-xs text-gray-400"><span class="w-5 h-5 rounded bg-gray-700 text-white flex items-center justify-center text-[10px] mr-3">A</span> Pyruvate carboxylase</div>
+              <div class="w-full h-8 rounded-lg bg-emerald-900/40 border border-emerald-500/50 flex items-center px-3 text-xs text-emerald-400"><span class="w-5 h-5 rounded bg-emerald-500 text-white flex items-center justify-center text-[10px] mr-3">C</span> Fructose-1,6-bisphosphatase</div>
             </div>
-            <div class="flex justify-end gap-3">
-              <div class="bg-blue-600 p-3 rounded-xl rounded-tr-none text-xs text-white">Yes, let's do it.</div>
+          </div>
+          <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-blue-600/20 blur-[80px] rounded-full"></div>
+        </div>
+
+        <div class="bento-card reveal delay-100 p-10 flex flex-col relative group overflow-hidden">
+          <div class="relative z-10">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-xl mb-6 border border-emerald-500/20">📅</div>
+            <h3 class="text-xl font-bold text-white mb-3">Strict Timelines</h3>
+            <p class="text-gray-400 text-sm leading-relaxed mb-6">Select a pre-built 30-day mastery track. Get a day-by-day checklist directly wired into the Quiz Engine.</p>
+          </div>
+          <div class="bg-[#0B0F19] border border-white/10 rounded-xl p-4 relative z-10 transform group-hover:scale-105 transition-transform duration-500">
+            <div class="flex items-center gap-3 mb-3 opacity-50"><div class="w-4 h-4 rounded-full border border-gray-600 flex items-center justify-center text-[8px] text-white">✓</div><div class="text-xs text-gray-400 line-through">Day 1: Amino Acids</div></div>
+            <div class="flex items-center gap-3 mb-3"><div class="w-4 h-4 rounded-full border-2 border-emerald-500"></div><div class="text-xs text-white font-semibold">Day 2: Glycolysis & TCA</div></div>
+            <div class="flex items-center gap-3"><div class="w-4 h-4 rounded-full border border-gray-600"></div><div class="text-xs text-gray-400">Day 3: Take Metabolism Quiz</div></div>
+          </div>
+        </div>
+
+        <div class="bento-card reveal p-10 flex flex-col relative group overflow-hidden">
+          <div class="relative z-10 h-full flex flex-col justify-between">
+            <div>
+              <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-xl mb-6 border border-purple-500/20">🏥</div>
+              <h3 class="text-xl font-bold text-white mb-3">AMCAS Vault</h3>
+              <p class="text-gray-400 text-sm leading-relaxed">Log your messy clinical hours, research, and shadowing instantly. Keep everything organized for application season.</p>
+            </div>
+            <div class="mt-6 flex flex-col gap-2">
+              <div class="bg-[#0B0F19] border border-white/10 rounded-lg p-3 flex justify-between items-center">
+                <div><div class="text-[10px] text-white font-bold">ER Scribe</div><div class="text-[8px] text-gray-500">Clinical</div></div>
+                <div class="text-xs font-bold text-emerald-400">120 hrs</div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="bento-card reveal delay-100 p-10 flex flex-col justify-between">
-          <div class="z-10">
-            <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white text-xl border border-white/10 mb-6 font-mono">⌘K</div>
-            <h3 class="text-xl font-bold text-white mb-3">Keyboard first.</h3>
-            <p class="text-gray-400 text-sm leading-relaxed">Work efficiently with instant access to common actions. Navigate the entire quiz engine without touching your mouse.</p>
+        <div class="bento-card reveal delay-100 md:col-span-2 p-10 flex flex-col md:flex-row gap-8 items-center justify-between group overflow-hidden">
+          <div class="md:w-1/2 relative z-10">
+            <h3 class="text-2xl font-bold text-white mb-4">The MetaBrain AI</h3>
+            <p class="text-gray-400 leading-relaxed text-sm">Connect every element of your workflow. The AI Coach acts as your personal tutor, answering complex MCAT questions, generating on-the-fly explanations, and helping you draft AMCAS essays.</p>
           </div>
-        </div>
-
-        <div class="bento-card reveal p-10 flex flex-col justify-between">
-          <div class="z-10">
-            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-2xl mb-6">📅</div>
-            <h3 class="text-xl font-bold text-white mb-3">Time-blocking.</h3>
-            <p class="text-gray-400 text-sm leading-relaxed">Transform massive MCAT subjects into structured daily time blocks for forced, disciplined productivity.</p>
-          </div>
-        </div>
-
-        <div class="bento-card reveal delay-100 md:col-span-2 p-10 flex flex-col justify-center relative">
-          <div class="absolute right-0 bottom-0 w-64 h-64 bg-blue-500/10 rounded-tl-full blur-3xl"></div>
-          
-          <div class="relative z-10 max-w-lg">
-            <h3 class="text-3xl font-bold text-white mb-4">The 200-Quiz Vault</h3>
-            <p class="text-gray-400 leading-relaxed font-medium mb-8">We engineered 200 hyper-adaptive quizzes covering B/B, C/P, P/S, and CARS. Every single question adheres to a strict variation matrix to eliminate test-taking predictability.</p>
-            <div class="flex gap-4">
-              <span class="px-4 py-2 bg-[#1A1A1A] text-xs font-bold text-white rounded-lg border border-white/10 flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-emerald-500"></div> B/B Vault Active</span>
-              <span class="px-4 py-2 bg-[#1A1A1A] text-xs font-bold text-white rounded-lg border border-white/10 flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-blue-500"></div> C/P Vault Active</span>
+          <div class="md:w-1/2 w-full relative z-10">
+            <div class="flex flex-col gap-3">
+              <div class="self-end bg-blue-600 px-4 py-2.5 rounded-2xl rounded-tr-sm text-xs text-white max-w-[85%] shadow-lg">Why doesn't Complex II pump protons in the ETC?</div>
+              <div class="self-start flex gap-2 w-full">
+                <div class="w-6 h-6 rounded-md bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center text-[10px] font-bold text-white mt-1 shrink-0">M</div>
+                <div class="bg-gray-800 border border-gray-700 px-4 py-3 rounded-2xl rounded-tl-sm text-xs text-gray-300 w-full shadow-lg leading-relaxed">
+                  Complex II (Succinate dehydrogenase) is a peripheral membrane protein. It transfers electrons from FADH2 to Coenzyme Q, but it doesn't span the entire mitochondrial membrane, so it physically cannot pump protons into the intermembrane space.
+                </div>
+              </div>
             </div>
           </div>
+          <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-emerald-600/10 blur-[80px] rounded-full"></div>
         </div>
 
       </div>
     </div>
   </section>
 
-  <section class="py-32 border-t border-white/5 relative overflow-hidden flex justify-center text-center">
-    <div class="spotlight-1" style="top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.3;"></div>
+  <section class="py-32 border-t border-white/5 relative overflow-hidden flex justify-center text-center bg-[#030712]">
+    <div class="spotlight-blue" style="top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.2;"></div>
     <div class="max-w-3xl px-6 reveal z-10">
-      <h2 class="text-5xl md:text-7xl font-extrabold text-white tracking-tighter mb-8">Join the Movement</h2>
-      <p class="text-xl text-gray-400 mb-12">Unlock the future of medical school prep. Your journey to the white coat starts here.</p>
-      <a href="/src/main.jsx" class="inline-block px-10 py-5 bg-white text-black font-extrabold text-lg rounded-full hover:scale-105 transition-transform shadow-[0_0_30px_rgba(255,255,255,0.3)]">
-        Start Training Now
+      <h2 class="text-5xl md:text-6xl font-extrabold text-white tracking-tighter mb-6">Join the Movement.</h2>
+      <p class="text-lg text-gray-400 mb-10">Unlock the future of medical school productivity. Remember, this journey is just getting started.</p>
+      <a href="/src/main.jsx" class="inline-block px-8 py-4 bg-white text-black font-extrabold text-[15px] rounded-full hover:scale-105 transition-transform shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+        Open the Web App
       </a>
     </div>
   </section>
 
-  <footer class="py-8 border-t border-white/5 bg-black text-center">
-    <p class="text-gray-600 text-sm font-medium">© 2024 MedSchoolPrep. Engineered for precision.</p>
+  <footer class="py-8 border-t border-white/5 bg-[#030712] text-center">
+    <p class="text-gray-600 text-[13px] font-medium">© 2026 MedSchoolPrep. Engineered for future physicians.</p>
   </footer>
 
   <script>
