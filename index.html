@@ -1,373 +1,930 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth bg-[#030014]">
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MedSchoolPrep | The Everything App for Premeds</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-        
-        :root {
-            --primary: #3b82f6;
-            --accent: #10b981;
-            --bg: #030014;
-        }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MedSchoolPrep — The Everything App for Premeds</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--bg); 
-            color: #fafafa; 
-            overflow-x: hidden;
-            letter-spacing: -0.02em;
-        }
+:root { --bg:#030014; --blue:#3b82f6; --indigo:#6366f1; --emerald:#10b981; --purple:#8b5cf6; }
 
-        /* ── THE HULY GRID & GRAIN ── */
-        .huly-canvas {
-            position: fixed; inset: 0; z-index: -5;
-            background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
-            background-size: 50px 50px;
-            mask-image: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), black 0%, transparent 80%);
-        }
+*{box-sizing:border-box;margin:0;padding:0;}
 
-        .grain {
-            position: fixed; inset: 0; z-index: -4; opacity: 0.03; pointer-events: none;
-            background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-        }
+html{background:var(--bg);}
 
-        /* ── CINEMATIC LIGHTING ── */
-        .hero-ray {
-            position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
-            width: 1000px; height: 600px;
-            background: radial-gradient(50% 50% at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 100%);
-            filter: blur(80px); z-index: -1;
-        }
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:#fafafa;
+  overflow-x:hidden;
+  letter-spacing:-0.02em;
+}
 
-        /* ── BUTTONS & INTERACTION ── */
-        .btn-glow {
-            position: relative; overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        .btn-glow::before {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transform: translateX(-100%); transition: 0.5s;
-        }
-        .btn-glow:hover::before { transform: translateX(100%); }
-        .btn-glow:hover { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); transform: scale(1.02); }
+/* ── GRID CANVAS ── */
+#grid-canvas{
+  position:fixed;inset:0;z-index:-5;
+  background-image:
+    linear-gradient(to right,rgba(255,255,255,0.035) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(255,255,255,0.035) 1px,transparent 1px);
+  background-size:52px 52px;
+  -webkit-mask-image:radial-gradient(circle at var(--mx,50%) var(--my,50%),black 0%,transparent 75%);
+  mask-image:radial-gradient(circle at var(--mx,50%) var(--my,50%),black 0%,transparent 75%);
+}
 
-        /* ── BENTO CARD OVERHAUL ── */
-        .bento-card {
-            background: rgba(10, 10, 20, 0.4);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        .bento-card:hover {
-            border-color: rgba(59, 130, 246, 0.3);
-            background: rgba(15, 15, 25, 0.6);
-            transform: translateY(-5px);
-        }
+/* ── GRAIN ── */
+.grain{
+  position:fixed;inset:0;z-index:-4;opacity:0.025;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat:repeat;background-size:200px 200px;
+}
 
-        /* ── MOCKUP 3D DEPTH ── */
-        .mockup-container {
-            perspective: 2000px;
-            transform-style: preserve-3d;
-        }
-        .mockup-window {
-            transform: rotateX(10deg) rotateY(-5deg);
-            transition: transform 0.2s ease-out;
-            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.7);
-        }
+/* ── AMBIENT LIGHTS ── */
+.ray-hero{
+  position:absolute;top:-280px;left:50%;transform:translateX(-50%);
+  width:1200px;height:700px;pointer-events:none;
+  background:radial-gradient(50% 50% at 50% 0%,rgba(59,130,246,0.18) 0%,transparent 100%);
+  filter:blur(80px);z-index:0;
+}
+.glow-blue{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,rgba(59,130,246,0.12) 0%,transparent 70%);
+  filter:blur(60px);pointer-events:none;
+}
 
-        /* ── REVEAL ANIMATIONS ── */
-        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-    </style>
+/* ── NAV ── */
+nav{
+  position:fixed;width:100%;top:0;z-index:200;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  background:rgba(3,0,20,0.6);
+}
+
+/* ── BUTTONS ── */
+.btn-primary{
+  position:relative;overflow:hidden;
+  background:white;color:#030014;
+  font-weight:900;border-radius:9999px;
+  transition:all .3s ease;cursor:pointer;border:none;
+}
+.btn-primary::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(0,0,0,0.08),transparent);
+  transform:translateX(-100%);transition:.5s;
+}
+.btn-primary:hover::before{transform:translateX(100%);}
+.btn-primary:hover{transform:scale(1.03);box-shadow:0 0 30px rgba(255,255,255,0.2);}
+
+.btn-outline{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  color:white;font-weight:700;
+  border-radius:9999px;cursor:pointer;
+  transition:all .3s;
+}
+.btn-outline:hover{background:rgba(255,255,255,0.12);}
+
+.btn-blue{
+  background:var(--blue);color:white;
+  font-weight:700;border-radius:9999px;
+  border:none;cursor:pointer;
+  transition:all .3s;
+  box-shadow:0 0 0 rgba(59,130,246,0);
+}
+.btn-blue:hover{box-shadow:0 0 24px rgba(59,130,246,0.45);transform:scale(1.02);}
+
+/* ── BENTO CARDS ── */
+.card{
+  background:rgba(8,8,20,0.5);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.06);
+  transition:all .5s cubic-bezier(.23,1,.32,1);
+  border-radius:28px;
+}
+.card:hover{
+  border-color:rgba(59,130,246,0.25);
+  background:rgba(12,12,28,0.65);
+  transform:translateY(-6px);
+  box-shadow:0 24px 60px rgba(0,0,0,0.4);
+}
+
+/* ── REVEAL ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(44px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-44px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1);}
+.reveal-left.visible{opacity:1;transform:translateX(0);}
+.reveal-right{opacity:0;transform:translateX(44px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1);}
+.reveal-right.visible{opacity:1;transform:translateX(0);}
+
+/* ── MOCKUP 3D ── */
+.mockup-wrap{perspective:2400px;transform-style:preserve-3d;}
+.mockup-3d{
+  transition:transform .12s ease-out;
+  box-shadow:0 60px 120px -20px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06);
+  border-radius:18px;overflow:hidden;
+}
+
+/* ── PING DOT ── */
+@keyframes ping2{75%,100%{transform:scale(2);opacity:0;}}
+.ping-dot{animation:ping2 1.4s cubic-bezier(0,0,.2,1) infinite;}
+
+/* ── MARQUEE ── */
+.marquee-track{display:flex;gap:0;width:max-content;animation:marquee 28s linear infinite;}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.marquee-track:hover{animation-play-state:paused;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px;}
+
+/* ── MODAL ── */
+.modal-bg{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;
+}
+.modal-bg.open{display:flex;}
+
+/* ── GRADIENT TEXT ── */
+.grad-blue{background:linear-gradient(135deg,#60a5fa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.grad-green{background:linear-gradient(135deg,#34d399,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* ── FEATURE ICON ── */
+.feat-icon{
+  width:48px;height:48px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+}
+
+/* ── STAT BAR COUNTER ── */
+@keyframes countUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.stat-num{animation:countUp .8s ease forwards;}
+
+/* ── TESTIMONIAL CARD ── */
+.test-card{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:20px;padding:28px;
+  transition:border-color .3s;
+}
+.test-card:hover{border-color:rgba(59,130,246,0.3);}
+
+/* ── PROGRESS BARS ── */
+.prog-bar{
+  height:4px;background:rgba(255,255,255,0.06);
+  border-radius:4px;overflow:hidden;margin-top:10px;
+}
+.prog-fill{height:100%;border-radius:4px;transition:width 1.5s cubic-bezier(.2,.8,.2,1);}
+
+/* ── CATEGORY PILLS ── */
+.cat-pill{
+  padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;
+  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.04);
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.cat-pill:hover,.cat-pill.active{
+  background:var(--blue);border-color:var(--blue);color:white;
+}
+
+/* ── INPUT STYLES ── */
+.modal-input{
+  width:100%;background:rgba(0,0,0,.4);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;padding:14px 18px;
+  color:white;font-size:14px;outline:none;
+  transition:border-color .2s;font-family:'Inter',sans-serif;
+}
+.modal-input:focus{border-color:var(--blue);}
+.modal-input::placeholder{color:rgba(255,255,255,.3);}
+</style>
 </head>
-<body class="antialiased">
+<body>
 
-    <div class="huly-canvas" id="grid"></div>
-    <div class="grain"></div>
+<!-- ── AMBIENT ── -->
+<div id="grid-canvas"></div>
+<div class="grain"></div>
 
-    <nav class="fixed w-full z-[100] top-0 border-b border-white/5 backdrop-blur-md bg-black/20">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
-            <div class="flex items-center gap-3 group cursor-pointer">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-black text-lg shadow-lg group-hover:rotate-6 transition-transform">M</div>
-                <span class="text-white font-bold text-xl tracking-tight">MedSchoolPrep</span>
-            </div>
-            
-            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
-                <a href="#features" class="hover:text-white transition-colors">Features</a>
-                <a href="#methodology" class="hover:text-white transition-colors">Methodology</a>
-                <a href="#" class="hover:text-white transition-colors">Pricing</a>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <button onclick="toggleCmdPalette()" class="hidden md:flex items-center gap-3 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/15 transition-all">
-                    <span class="text-xs text-gray-500 uppercase font-bold tracking-widest">Search</span>
-                    <kbd class="text-[10px] text-gray-400 bg-black/40 px-1.5 py-0.5 rounded border border-white/10">⌘K</kbd>
-                </button>
-                <button onclick="toggleAuthModal()" class="btn-glow px-6 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-full">
-                    Launch App
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <section class="relative pt-32 pb-20 px-6 overflow-hidden min-h-screen flex flex-col items-center justify-center">
-        <div class="hero-ray"></div>
-        
-        <div class="text-center z-10 max-w-4xl">
-            <div class="reveal inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-[11px] font-bold uppercase tracking-widest mb-8">
-                <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                </span>
-                Now Powered by MetaBrain v4
-            </div>
-
-            <h1 class="reveal text-5xl md:text-[85px] font-[900] tracking-tight leading-[0.95] text-white mb-8" style="transition-delay: 100ms;">
-                Your entire medical career, <span class="text-transparent bg-clip-text bg-gradient-to-b from-blue-400 to-indigo-600">synchronized.</span>
-            </h1>
-
-            <p class="reveal text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-12" style="transition-delay: 200ms;">
-                The high-performance workspace for the modern premed. 200+ adaptive quizzes, automated clinical logs, and AI-driven performance analytics.
-            </p>
-
-            <div class="reveal flex gap-4 justify-center mb-24" style="transition-delay: 300ms;">
-                <button onclick="toggleAuthModal()" class="btn-glow px-10 py-4 bg-white text-black font-black rounded-full text-lg shadow-xl shadow-white/5">
-                    Get Started Free
-                </button>
-                <button class="px-10 py-4 bg-white/5 border border-white/10 text-white font-bold rounded-full text-lg backdrop-blur-md hover:bg-white/10 transition-all">
-                    View Demo
-                </button>
-            </div>
-
-            <div class="mockup-container reveal" style="transition-delay: 400ms;">
-                <div id="mockup" class="mockup-window w-full max-w-5xl mx-auto rounded-2xl border border-white/10 bg-[#0B0F19] overflow-hidden">
-                    <div class="h-11 border-b border-white/5 bg-black/40 flex items-center px-4 justify-between">
-                        <div class="flex gap-2">
-                            <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
-                            <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
-                            <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
-                        </div>
-                        <div class="text-[11px] font-mono text-gray-500">medschoolprep.app / dashboard</div>
-                        <div class="w-10"></div>
-                    </div>
-                    <div class="flex h-[500px]">
-                        <div class="w-64 border-r border-white/5 bg-black/20 p-6 hidden md:block">
-                            <div class="space-y-6">
-                                <div class="h-4 w-32 bg-white/5 rounded"></div>
-                                <div class="space-y-3">
-                                    <div class="h-8 w-full bg-blue-600/20 border border-blue-500/30 rounded-lg"></div>
-                                    <div class="h-8 w-full bg-white/5 rounded-lg"></div>
-                                    <div class="h-8 w-full bg-white/5 rounded-lg"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex-1 p-8 text-left bg-[#030014]">
-                            <div class="flex justify-between items-end mb-10">
-                                <div>
-                                    <h3 class="text-2xl font-bold mb-1">Mastery Engine</h3>
-                                    <p class="text-sm text-gray-500">System Performance: Optimal</p>
-                                </div>
-                                <div class="flex gap-2">
-                                    <div class="w-12 h-12 rounded-full border-2 border-blue-500/30 border-t-blue-500 flex items-center justify-center font-bold text-xs">84%</div>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-6">
-                                <div class="p-5 rounded-2xl bg-white/5 border border-white/10">
-                                    <div class="text-[10px] text-blue-400 font-bold uppercase tracking-widest mb-2">Biololgy</div>
-                                    <div class="font-bold text-white mb-4">Cellular Respiration</div>
-                                    <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                                        <div class="h-full w-[70%] bg-blue-500"></div>
-                                    </div>
-                                </div>
-                                <div class="p-5 rounded-2xl bg-white/5 border border-white/10">
-                                    <div class="text-[10px] text-emerald-400 font-bold uppercase tracking-widest mb-2">Chemistry</div>
-                                    <div class="font-bold text-white mb-4">Acid-Base Equilibria</div>
-                                    <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                                        <div class="h-full w-[45%] bg-emerald-500"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="features" class="py-32 px-6">
-        <div class="max-w-7xl mx-auto">
-            <div class="mb-20 reveal text-center">
-                <h2 class="text-4xl md:text-6xl font-black mb-6">Built for speed.</h2>
-                <p class="text-gray-400 text-xl">The complete toolkit for high-stakes testing.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-                <div class="bento-card reveal md:col-span-8 p-10 rounded-[32px] group overflow-hidden relative min-h-[400px]">
-                    <div class="relative z-10 max-w-md">
-                        <h3 class="text-3xl font-black mb-4">The Mastery Engine</h3>
-                        <p class="text-gray-400 leading-relaxed mb-8">Adaptive algorithms that detect your weaknesses and rewrite the curriculum in real-time. No more generic study sessions.</p>
-                        <button class="flex items-center gap-2 text-blue-400 font-bold hover:gap-4 transition-all">Explore the Engine <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></button>
-                    </div>
-                    <div class="absolute right-0 bottom-0 top-0 w-1/2 bg-gradient-to-l from-blue-600/10 to-transparent p-10 flex items-center justify-center">
-                        <div class="w-full bg-black/40 border border-white/10 rounded-2xl p-6 rotate-[-5deg] group-hover:rotate-0 transition-all duration-700">
-                           <div class="flex items-center gap-3 mb-6">
-                               <div class="w-10 h-10 rounded-full bg-blue-500"></div>
-                               <div class="space-y-1"><div class="h-2 w-20 bg-white/20 rounded"></div><div class="h-2 w-12 bg-white/10 rounded"></div></div>
-                           </div>
-                           <div class="space-y-3">
-                               <div class="h-12 w-full bg-white/5 rounded-xl border border-white/10 flex items-center px-4 text-xs font-bold text-blue-400">✓ Proper Answer Variation</div>
-                               <div class="h-12 w-full bg-white/5 rounded-xl border border-white/5 opacity-50"></div>
-                           </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bento-card reveal md:col-span-4 p-10 rounded-[32px] flex flex-col justify-between" style="transition-delay: 200ms;">
-                    <div>
-                        <div class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 mb-6 text-2xl font-bold">📅</div>
-                        <h3 class="text-2xl font-black mb-3">Sync Schedule</h3>
-                        <p class="text-gray-400 text-sm">Automated study blocks that sync with your actual medical school classes.</p>
-                    </div>
-                    <div class="pt-8 flex -space-x-3">
-                        <div class="w-10 h-10 rounded-full border-2 border-[#030014] bg-gray-800"></div>
-                        <div class="w-10 h-10 rounded-full border-2 border-[#030014] bg-gray-700"></div>
-                        <div class="w-10 h-10 rounded-full border-2 border-[#030014] bg-blue-600 flex items-center justify-center text-[10px] font-bold">+12k</div>
-                    </div>
-                </div>
-
-                <div class="bento-card reveal md:col-span-4 p-10 rounded-[32px] min-h-[300px]" style="transition-delay: 100ms;">
-                    <h3 class="text-2xl font-black mb-4 text-purple-400">AMCAS Vault</h3>
-                    <p class="text-gray-400 text-sm mb-10">Export clinical hours and shadowing logs with one-click AMCAS compatibility.</p>
-                    <div class="w-full h-32 bg-white/5 rounded-2xl border border-white/5 border-dashed flex items-center justify-center text-gray-600 text-xs font-mono uppercase tracking-widest">
-                        Drag CSV to Import
-                    </div>
-                </div>
-
-                <div class="bento-card reveal md:col-span-8 p-10 rounded-[32px] flex flex-col md:flex-row gap-10 items-center overflow-hidden relative" style="transition-delay: 300ms;">
-                    <div class="flex-1 relative z-10">
-                        <h3 class="text-3xl font-black mb-4">MetaBrain Coach</h3>
-                        <p class="text-gray-400 leading-relaxed text-sm">A 24/7 personal tutor that understands your specific data points. Ask anything from O-Chem mechanisms to admission strategies.</p>
-                    </div>
-                    <div class="flex-1 w-full bg-black/40 border border-white/10 rounded-2xl p-6 relative z-10">
-                        <div class="text-[10px] text-gray-500 font-bold mb-4">ACTIVE CHAT</div>
-                        <div class="space-y-3">
-                            <div class="bg-blue-600/20 p-3 rounded-lg text-xs text-blue-200">Explain the bypass of PFK-1...</div>
-                            <div class="bg-white/5 p-3 rounded-lg text-xs text-gray-400 leading-relaxed italic">Gluconeogenesis uses Fructose-1,6-bisphosphatase to bypass...</div>
-                        </div>
-                    </div>
-                    <div class="absolute -right-20 -top-20 w-80 h-80 bg-blue-600/10 blur-[100px] rounded-full"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-40 text-center relative px-6 overflow-hidden">
-        <div class="reveal">
-            <h2 class="text-6xl md:text-[100px] font-black tracking-tighter text-white mb-10">Study smarter.<br/>Don't work harder.</h2>
-            <button onclick="toggleAuthModal()" class="btn-glow px-12 py-5 bg-white text-black font-black rounded-full text-xl">
-                Open Workspace
-            </button>
-            <p class="mt-8 text-gray-500 font-medium">Join 20,000+ premeds accelerating their career.</p>
-        </div>
-    </section>
-
-    <div id="cmdPalette" class="modal-overlay fixed inset-0 z-[200] hidden items-start justify-center pt-[15vh] px-4" onclick="if(event.target === this) toggleCmdPalette()">
-        <div class="modal-content w-full max-w-2xl bg-[#0B0F19] border border-white/10 rounded-2xl shadow-2xl overflow-hidden ring-1 ring-blue-500/50">
-            <div class="flex items-center px-5 py-4 border-b border-white/5">
-                <input type="text" id="cmdInput" placeholder="Jump to..." class="w-full bg-transparent border-none text-white focus:outline-none text-base placeholder-gray-600">
-                <kbd class="text-[10px] text-gray-500 border border-white/10 px-2 py-1 rounded">ESC</kbd>
-            </div>
-            <div class="p-3 space-y-1">
-                <div class="px-3 py-2 text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em]">Quick Actions</div>
-                <div class="flex items-center gap-4 px-4 py-3 hover:bg-white/5 rounded-xl cursor-pointer group transition-all">
-                    <span class="text-blue-500 group-hover:scale-110 transition-transform">🧠</span>
-                    <span class="text-sm font-semibold">Start Mock MCAT Exam</span>
-                </div>
-                <div class="flex items-center gap-4 px-4 py-3 hover:bg-white/5 rounded-xl cursor-pointer group transition-all">
-                    <span class="text-emerald-500 group-hover:scale-110 transition-transform">📅</span>
-                    <span class="text-sm font-semibold">View Study Schedule</span>
-                </div>
-            </div>
-        </div>
+<!-- ══════════════ NAV ══════════════ -->
+<nav>
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;">
+    <div style="display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="scrollTo(0,0)">
+      <div style="width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:white;transition:transform .3s;" onmouseover="this.style.transform='rotate(8deg)'" onmouseout="this.style.transform='rotate(0)'">M</div>
+      <span style="font-weight:800;font-size:18px;color:white;letter-spacing:-.03em;">MedSchoolPrep</span>
     </div>
 
-    <div id="authModal" class="modal-overlay fixed inset-0 z-[200] hidden items-center justify-center bg-black/80 backdrop-blur-sm" onclick="if(event.target === this) toggleAuthModal()">
-        <div class="modal-content w-full max-w-md bg-[#0B0F19] border border-white/10 rounded-[32px] p-10 relative">
-            <button onclick="toggleAuthModal()" class="absolute top-8 right-8 text-gray-600 hover:text-white transition-colors">✕</button>
-            <div class="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-black text-3xl mb-8 shadow-2xl shadow-blue-600/40">M</div>
-            <h2 class="text-3xl font-black mb-2">Welcome Back</h2>
-            <p class="text-gray-500 mb-8">Ready to dominate your session?</p>
-            
-            <div class="space-y-4">
-                <input type="email" placeholder="Medical Email" class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-white focus:ring-2 focus:ring-blue-600 outline-none transition-all">
-                <input type="password" placeholder="Secure Password" class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-white focus:ring-2 focus:ring-blue-600 outline-none transition-all">
-                <a href="/src/main.jsx" class="block w-full text-center py-4 bg-white text-black font-black rounded-xl hover:bg-gray-200 transition-colors">Sign In</a>
-            </div>
-        </div>
+    <div style="display:none;gap:32px;font-size:13px;font-weight:500;color:rgba(255,255,255,.5);" class="nav-links" id="navLinks">
+      <a href="#features" style="color:inherit;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Features</a>
+      <a href="#quizzes" style="color:inherit;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Quiz Library</a>
+      <a href="#methodology" style="color:inherit;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Methodology</a>
+      <a href="#" style="color:inherit;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Pricing</a>
     </div>
 
-    <script>
-        // 1. DYNAMIC CURSOR GRID
-        const grid = document.getElementById('grid');
-        document.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth) * 100;
-            const y = (e.clientY / window.innerHeight) * 100;
-            grid.style.setProperty('--mouse-x', `${x}%`);
-            grid.style.setProperty('--mouse-y', `${y}%`);
-        });
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button onclick="openAuth('login')" style="font-size:13px;font-weight:600;color:rgba(255,255,255,.6);background:none;border:none;cursor:pointer;padding:8px 12px;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.6)'">Sign In</button>
+      <button onclick="openAuth('signup')" class="btn-blue" style="font-size:13px;padding:9px 22px;">Get Started Free</button>
+    </div>
+  </div>
+</nav>
 
-        // 2. 3D HERO MOCKUP TRACKING
-        const mockup = document.getElementById('mockup');
-        document.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 45;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 45;
-            mockup.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg) translateY(0px)`;
-        });
+<!-- ══════════════ HERO ══════════════ -->
+<section style="position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 24px 80px;overflow:hidden;text-align:center;">
+  <div class="ray-hero"></div>
+  <div class="glow-blue" style="width:600px;height:400px;bottom:-100px;left:-100px;"></div>
+  <div class="glow-blue" style="width:400px;height:400px;bottom:-50px;right:-80px;background:radial-gradient(circle,rgba(99,102,241,0.1) 0%,transparent 70%);"></div>
 
-        // 3. REVEAL LOGIC
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('active');
-            });
-        }, { threshold: 0.1 });
+  <!-- Badge -->
+  <div class="reveal" style="transition-delay:.05s;margin-bottom:32px;">
+    <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px 6px 10px;border-radius:100px;border:1px solid rgba(59,130,246,.3);background:rgba(59,130,246,.1);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(147,197,253,1);">
+      <span style="position:relative;display:flex;width:8px;height:8px;">
+        <span class="ping-dot" style="position:absolute;inset:0;border-radius:50%;background:rgba(96,165,250,.7);"></span>
+        <span style="position:relative;width:8px;height:8px;border-radius:50%;background:#3b82f6;display:inline-block;"></span>
+      </span>
+      Now live — MetaBrain AI v4.0
+    </div>
+  </div>
 
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  <!-- Headline -->
+  <h1 class="reveal" style="font-size:clamp(44px,7vw,88px);font-weight:900;line-height:.95;letter-spacing:-.04em;max-width:900px;color:white;margin-bottom:28px;transition-delay:.1s;">
+    Your entire<br/>medical career,<br/><span class="grad-blue">synchronized.</span>
+  </h1>
 
-        // 4. MODALS & UI
-        function toggleAuthModal() {
-            const m = document.getElementById('authModal');
-            m.classList.toggle('hidden');
-            m.classList.toggle('flex');
-        }
+  <!-- Sub -->
+  <p class="reveal" style="font-size:clamp(16px,2vw,20px);color:rgba(255,255,255,.45);max-width:560px;line-height:1.6;margin-bottom:48px;transition-delay:.2s;font-weight:400;">
+    The high-performance MCAT workspace for serious premeds. Adaptive quizzes, AI coaching, clinical log tracking, and real-time performance analytics — all in one place.
+  </p>
 
-        function toggleCmdPalette() {
-            const p = document.getElementById('cmdPalette');
-            p.classList.toggle('hidden');
-            p.classList.toggle('flex');
-            if (!p.classList.contains('hidden')) {
-                setTimeout(() => document.getElementById('cmdInput').focus(), 50);
-            }
-        }
+  <!-- CTAs -->
+  <div class="reveal" style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:80px;transition-delay:.3s;">
+    <button onclick="openAuth('signup')" class="btn-primary" style="font-size:17px;padding:16px 36px;">
+      Start for Free
+    </button>
+    <button onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})" class="btn-outline" style="font-size:17px;padding:16px 36px;">
+      Explore Features
+    </button>
+  </div>
 
-        document.addEventListener('keydown', (e) => {
-            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                e.preventDefault();
-                toggleCmdPalette();
-            }
-            if (e.key === 'Escape') {
-                document.getElementById('cmdPalette').classList.add('hidden');
-                document.getElementById('authModal').classList.add('hidden');
-            }
-        });
-    </script>
+  <!-- 3D Mockup -->
+  <div class="reveal mockup-wrap" style="width:100%;max-width:1000px;transition-delay:.45s;" id="mockupWrap">
+    <div class="mockup-3d" id="mockup3d">
+      <!-- Window chrome -->
+      <div style="height:44px;background:rgba(0,0,0,.6);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;padding:0 16px;justify-content:space-between;">
+        <div style="display:flex;gap:7px;">
+          <div style="width:12px;height:12px;border-radius:50%;background:#ff5f57;"></div>
+          <div style="width:12px;height:12px;border-radius:50%;background:#febc2e;"></div>
+          <div style="width:12px;height:12px;border-radius:50%;background:#28c840;"></div>
+        </div>
+        <div style="font-size:11px;font-family:monospace;color:rgba(255,255,255,.3);">medschoolprep.app / dashboard</div>
+        <div style="width:40px;"></div>
+      </div>
+
+      <!-- App body -->
+      <div style="display:flex;height:500px;background:#030014;">
+        <!-- Sidebar -->
+        <div style="width:240px;border-right:1px solid rgba(255,255,255,.05);background:rgba(0,0,0,.3);padding:24px 16px;flex-shrink:0;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:14px;">Navigation</div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="height:36px;border-radius:10px;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.25);display:flex;align-items:center;padding:0 12px;font-size:13px;font-weight:600;color:#93c5fd;gap:8px;">🧠 AI Coach</div>
+            <div style="height:36px;border-radius:10px;background:rgba(255,255,255,.04);display:flex;align-items:center;padding:0 12px;font-size:13px;color:rgba(255,255,255,.4);gap:8px;">📚 Quiz Library</div>
+            <div style="height:36px;border-radius:10px;background:rgba(255,255,255,.04);display:flex;align-items:center;padding:0 12px;font-size:13px;color:rgba(255,255,255,.4);gap:8px;">📊 Analytics</div>
+            <div style="height:36px;border-radius:10px;background:rgba(255,255,255,.04);display:flex;align-items:center;padding:0 12px;font-size:13px;color:rgba(255,255,255,.4);gap:8px;">📝 AMCAS Vault</div>
+            <div style="height:36px;border-radius:10px;background:rgba(255,255,255,.04);display:flex;align-items:center;padding:0 12px;font-size:13px;color:rgba(255,255,255,.4);gap:8px;">📅 Study Planner</div>
+          </div>
+          <div style="margin-top:24px;border-top:1px solid rgba(255,255,255,.05);padding-top:20px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:12px;">Weak Areas</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;">Biochemistry</div>
+            <div class="prog-bar"><div class="prog-fill" style="width:38%;background:linear-gradient(90deg,#f59e0b,#ef4444);"></div></div>
+            <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;margin-top:10px;">CARS</div>
+            <div class="prog-bar"><div class="prog-fill" style="width:55%;background:linear-gradient(90deg,#3b82f6,#6366f1);"></div></div>
+            <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;margin-top:10px;">Physics</div>
+            <div class="prog-bar"><div class="prog-fill" style="width:71%;background:linear-gradient(90deg,#10b981,#06b6d4);"></div></div>
+          </div>
+        </div>
+
+        <!-- Main -->
+        <div style="flex:1;padding:32px;overflow:hidden;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;">
+            <div>
+              <div style="font-size:22px;font-weight:800;margin-bottom:4px;">Mastery Engine</div>
+              <div style="font-size:13px;color:rgba(255,255,255,.35);">System Performance · Optimal</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="text-align:center;">
+                <div style="font-size:28px;font-weight:900;color:#3b82f6;">84%</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.08em;text-transform:uppercase;">Overall</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div style="padding:18px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);">
+              <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#60a5fa;margin-bottom:8px;">Biology</div>
+              <div style="font-size:14px;font-weight:700;color:white;margin-bottom:12px;">Cellular Respiration</div>
+              <div class="prog-bar"><div class="prog-fill" style="width:72%;background:#3b82f6;"></div></div>
+              <div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:6px;">72% mastery</div>
+            </div>
+            <div style="padding:18px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);">
+              <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#34d399;margin-bottom:8px;">Chemistry</div>
+              <div style="font-size:14px;font-weight:700;color:white;margin-bottom:12px;">Acid-Base Equilibria</div>
+              <div class="prog-bar"><div class="prog-fill" style="width:48%;background:#10b981;"></div></div>
+              <div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:6px;">48% mastery</div>
+            </div>
+            <div style="padding:18px;border-radius:16px;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);grid-column:span 2;">
+              <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#93c5fd;margin-bottom:8px;">AI Coach · Active</div>
+              <div style="font-size:13px;color:rgba(255,255,255,.5);">You improved your Biochemistry score by <span style="color:#60a5fa;font-weight:700;">+12 points</span> this week. Focus on lipid metabolism next — it appears in 3 upcoming MCAT topics.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ STATS ══════════════ -->
+<section style="padding:0 24px 80px;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div class="reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.06);">
+      <div style="padding:36px 40px;background:rgba(255,255,255,.02);text-align:center;">
+        <div style="font-size:clamp(36px,5vw,56px);font-weight:900;letter-spacing:-.04em;" class="grad-blue" id="cnt1">22,500+</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:6px;font-weight:500;">MCAT Questions</div>
+      </div>
+      <div style="padding:36px 40px;background:rgba(255,255,255,.02);text-align:center;border-left:1px solid rgba(255,255,255,.06);border-right:1px solid rgba(255,255,255,.06);">
+        <div style="font-size:clamp(36px,5vw,56px);font-weight:900;letter-spacing:-.04em;" class="grad-green" id="cnt2">20k+</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:6px;font-weight:500;">Active Students</div>
+      </div>
+      <div style="padding:36px 40px;background:rgba(255,255,255,.02);text-align:center;">
+        <div style="font-size:clamp(36px,5vw,56px);font-weight:900;letter-spacing:-.04em;background:linear-gradient(135deg,#a78bfa,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;" id="cnt3">4.9 ★</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:6px;font-weight:500;">Average Rating</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ MARQUEE ══════════════ -->
+<section style="padding:0 0 100px;overflow:hidden;position:relative;">
+  <div style="position:absolute;left:0;top:0;bottom:0;width:120px;background:linear-gradient(to right,#030014,transparent);z-index:2;pointer-events:none;"></div>
+  <div style="position:absolute;right:0;top:0;bottom:0;width:120px;background:linear-gradient(to left,#030014,transparent);z-index:2;pointer-events:none;"></div>
+  <div class="marquee-track">
+    <div style="display:flex;gap:16px;padding:0 8px;" id="marq1"></div>
+    <div style="display:flex;gap:16px;padding:0 8px;" id="marq2"></div>
+  </div>
+</section>
+
+<!-- ══════════════ FEATURES BENTO ══════════════ -->
+<section id="features" style="padding:0 24px 120px;">
+  <div style="max-width:1280px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;margin-bottom:80px;">
+      <div style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:100px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:22px;">Platform Features</div>
+      <h2 style="font-size:clamp(38px,5vw,68px);font-weight:900;letter-spacing:-.04em;line-height:.95;margin-bottom:20px;">Built for the<br/><span class="grad-blue">modern premed.</span></h2>
+      <p style="font-size:18px;color:rgba(255,255,255,.4);max-width:500px;margin:0 auto;font-weight:400;line-height:1.5;">Every tool you need to get into your dream medical school, in one synchronized workspace.</p>
+    </div>
+
+    <!-- Bento Grid -->
+    <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:16px;">
+
+      <!-- Card 1 — Mastery Engine (LARGE) -->
+      <div class="card reveal" style="grid-column:span 8;padding:48px;min-height:400px;position:relative;overflow:hidden;transition-delay:.05s;">
+        <div style="position:absolute;top:-60px;right:-60px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.1) 0%,transparent 70%);pointer-events:none;"></div>
+        <div style="max-width:420px;position:relative;z-index:1;">
+          <div class="feat-icon" style="background:rgba(59,130,246,.12);color:#3b82f6;margin-bottom:24px;">🧠</div>
+          <h3 style="font-size:28px;font-weight:900;margin-bottom:14px;letter-spacing:-.03em;">Mastery Engine</h3>
+          <p style="color:rgba(255,255,255,.45);line-height:1.65;margin-bottom:28px;font-size:15px;">Adaptive algorithms continuously detect knowledge gaps and reshape your curriculum in real time. No two sessions are ever the same.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <span style="padding:5px 12px;border-radius:20px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.2);font-size:12px;color:#93c5fd;font-weight:600;">Adaptive Learning</span>
+            <span style="padding:5px 12px;border-radius:20px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.2);font-size:12px;color:#93c5fd;font-weight:600;">Spaced Repetition</span>
+            <span style="padding:5px 12px;border-radius:20px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.2);font-size:12px;color:#93c5fd;font-weight:600;">Gap Analysis</span>
+          </div>
+        </div>
+        <!-- mini mockup -->
+        <div style="position:absolute;right:32px;bottom:32px;width:220px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px;transform:rotate(-3deg);transition:transform .5s;" onmouseover="this.style.transform='rotate(0deg)'" onmouseout="this.style.transform='rotate(-3deg)'">
+          <div style="font-size:11px;color:rgba(255,255,255,.3);margin-bottom:12px;font-weight:600;">PERFORMANCE TODAY</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;"><span style="color:rgba(255,255,255,.6);">Glycolysis</span><span style="color:#34d399;font-weight:700;">+18%</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:82%;background:linear-gradient(90deg,#3b82f6,#6366f1);"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;"><span style="color:rgba(255,255,255,.6);">Acid-Base</span><span style="color:#f59e0b;font-weight:700;">+7%</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:56%;background:linear-gradient(90deg,#f59e0b,#ef4444);"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 — AI Coach (SMALL) -->
+      <div class="card reveal" style="grid-column:span 4;padding:36px;display:flex;flex-direction:column;justify-content:space-between;transition-delay:.1s;">
+        <div>
+          <div class="feat-icon" style="background:rgba(16,185,129,.1);color:#10b981;margin-bottom:20px;">💬</div>
+          <h3 style="font-size:22px;font-weight:900;margin-bottom:10px;letter-spacing:-.03em;">AI Coach</h3>
+          <p style="color:rgba(255,255,255,.4);font-size:13px;line-height:1.6;">Ask anything — O-Chem mechanisms, AMCAS essays, MMI prep. Available 24/7.</p>
+        </div>
+        <div style="margin-top:24px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:16px;">
+          <div style="font-size:11px;color:rgba(16,185,129,.7);font-weight:700;margin-bottom:10px;letter-spacing:.05em;">ACTIVE CHAT</div>
+          <div style="background:rgba(59,130,246,.15);border-radius:10px;padding:10px;font-size:12px;color:#93c5fd;margin-bottom:8px;">"Explain the Cori cycle..."</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.4);line-height:1.5;font-style:italic;">The Cori cycle converts lactate from anaerobic glycolysis into glucose via hepatic gluconeogenesis...</div>
+        </div>
+      </div>
+
+      <!-- Card 3 — Quiz Library -->
+      <div class="card reveal" style="grid-column:span 4;padding:36px;transition-delay:.15s;">
+        <div class="feat-icon" style="background:rgba(139,92,246,.1);color:#a78bfa;margin-bottom:20px;">📚</div>
+        <h3 style="font-size:22px;font-weight:900;margin-bottom:10px;letter-spacing:-.03em;">Quiz Library</h3>
+        <p style="color:rgba(255,255,255,.4);font-size:13px;line-height:1.6;margin-bottom:20px;">1,500+ timed MCAT-style quizzes with enforced answer variation and detailed explanations.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="padding:4px 10px;border-radius:20px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);font-size:11px;color:#c4b5fd;font-weight:600;">Bio/Biochem</span>
+          <span style="padding:4px 10px;border-radius:20px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);font-size:11px;color:#c4b5fd;font-weight:600;">Chem/Phys</span>
+          <span style="padding:4px 10px;border-radius:20px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);font-size:11px;color:#c4b5fd;font-weight:600;">Psych/Soc</span>
+          <span style="padding:4px 10px;border-radius:20px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);font-size:11px;color:#c4b5fd;font-weight:600;">CARS</span>
+        </div>
+      </div>
+
+      <!-- Card 4 — AMCAS Vault -->
+      <div class="card reveal" style="grid-column:span 4;padding:36px;transition-delay:.2s;">
+        <div class="feat-icon" style="background:rgba(249,115,22,.1);color:#fb923c;margin-bottom:20px;">📋</div>
+        <h3 style="font-size:22px;font-weight:900;margin-bottom:10px;letter-spacing:-.03em;">AMCAS Vault</h3>
+        <p style="color:rgba(255,255,255,.4);font-size:13px;line-height:1.6;margin-bottom:20px;">Log clinical hours, shadowing, research, and activities. Export AMCAS-ready with one click.</p>
+        <div style="border:1px dashed rgba(255,255,255,.1);border-radius:12px;padding:16px;text-align:center;font-size:11px;font-weight:700;color:rgba(255,255,255,.2);letter-spacing:.08em;text-transform:uppercase;">
+          Drop CSV to Import ↑
+        </div>
+      </div>
+
+      <!-- Card 5 — Study Planner -->
+      <div class="card reveal" style="grid-column:span 4;padding:36px;transition-delay:.25s;">
+        <div class="feat-icon" style="background:rgba(6,182,212,.1);color:#22d3ee;margin-bottom:20px;">📅</div>
+        <h3 style="font-size:22px;font-weight:900;margin-bottom:10px;letter-spacing:-.03em;">Smart Planner</h3>
+        <p style="color:rgba(255,255,255,.4);font-size:13px;line-height:1.6;margin-bottom:20px;">Auto-scheduled Pomodoro blocks synced to your MCAT date. Adjusts dynamically as you progress.</p>
+        <div style="display:flex;gap:6px;">
+          <div style="flex:1;background:rgba(59,130,246,.15);border-radius:10px;padding:10px;text-align:center;font-size:11px;font-weight:700;color:#93c5fd;">Biochem<br/><span style="font-size:16px;font-weight:900;">45m</span></div>
+          <div style="flex:1;background:rgba(16,185,129,.1);border-radius:10px;padding:10px;text-align:center;font-size:11px;font-weight:700;color:#6ee7b7;">CARS<br/><span style="font-size:16px;font-weight:900;">30m</span></div>
+          <div style="flex:1;background:rgba(139,92,246,.1);border-radius:10px;padding:10px;text-align:center;font-size:11px;font-weight:700;color:#c4b5fd;">Break<br/><span style="font-size:16px;font-weight:900;">10m</span></div>
+        </div>
+      </div>
+
+      <!-- Card 6 — Analytics (LARGE) -->
+      <div class="card reveal" style="grid-column:span 8;padding:48px;min-height:320px;position:relative;overflow:hidden;transition-delay:.3s;">
+        <div style="position:absolute;bottom:-40px;right:-40px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,.08) 0%,transparent 70%);pointer-events:none;"></div>
+        <div style="max-width:420px;position:relative;z-index:1;">
+          <div class="feat-icon" style="background:rgba(16,185,129,.1);color:#10b981;margin-bottom:24px;">📊</div>
+          <h3 style="font-size:28px;font-weight:900;margin-bottom:14px;letter-spacing:-.03em;">Performance Analytics</h3>
+          <p style="color:rgba(255,255,255,.45);line-height:1.65;font-size:15px;">Granular insights into every topic, section, and question type. Know exactly where every hour of study should go.</p>
+        </div>
+        <!-- Chart bars -->
+        <div style="position:absolute;right:40px;bottom:40px;display:flex;align-items:flex-end;gap:8px;height:120px;">
+          <div style="width:18px;border-radius:4px 4px 0 0;background:rgba(59,130,246,.4);height:40%;transition:height .3s;" onmouseover="this.style.background='rgba(59,130,246,.8)'" onmouseout="this.style.background='rgba(59,130,246,.4)'"></div>
+          <div style="width:18px;border-radius:4px 4px 0 0;background:rgba(59,130,246,.4);height:60%;" onmouseover="this.style.background='rgba(59,130,246,.8)'" onmouseout="this.style.background='rgba(59,130,246,.4)'"></div>
+          <div style="width:18px;border-radius:4px 4px 0 0;background:rgba(59,130,246,.4);height:48%;" onmouseover="this.style.background='rgba(59,130,246,.8)'" onmouseout="this.style.background='rgba(59,130,246,.4)'"></div>
+          <div style="width:18px;border-radius:4px 4px 0 0;background:rgba(59,130,246,.6);height:75%;" onmouseover="this.style.background='rgba(59,130,246,.9)'" onmouseout="this.style.background='rgba(59,130,246,.6)'"></div>
+          <div style="width:18px;border-radius:4px 4px 0 0;background:rgba(59,130,246,.6);height:85%;" onmouseover="this.style.background='rgba(59,130,246,.9)'" onmouseout="this.style.background='rgba(59,130,246,.6)'"></div>
+          <div style="width:18px;border-radius:4px 4px 0 0;background:rgba(16,185,129,.7);height:100%;box-shadow:0 0 20px rgba(16,185,129,.4);" onmouseover="this.style.background='rgba(16,185,129,1)'" onmouseout="this.style.background='rgba(16,185,129,.7)'"></div>
+          <div style="width:18px;border-radius:4px 4px 0 0;background:rgba(16,185,129,.6);height:92%;"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ HOW IT WORKS ══════════════ -->
+<section id="methodology" style="padding:0 24px 120px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;margin-bottom:80px;">
+      <div style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:100px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:22px;">How It Works</div>
+      <h2 style="font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-.04em;line-height:.95;margin-bottom:18px;">From signup to <span class="grad-green">acceptance.</span></h2>
+      <p style="font-size:17px;color:rgba(255,255,255,.4);max-width:480px;margin:0 auto;line-height:1.5;">A three-phase system that meets you where you are and gets you where you need to be.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <div class="card reveal" style="padding:40px;text-align:center;transition-delay:.05s;">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(59,130,246,.2),rgba(99,102,241,.2));border:1px solid rgba(59,130,246,.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 24px;">01</div>
+        <h3 style="font-size:20px;font-weight:800;margin-bottom:12px;">Profile Setup</h3>
+        <p style="color:rgba(255,255,255,.4);font-size:14px;line-height:1.6;">Tell us your MCAT date, target score, and current baseline. MetaBrain calibrates your personalized curriculum instantly.</p>
+      </div>
+      <div class="card reveal" style="padding:40px;text-align:center;border-color:rgba(59,130,246,.2);transition-delay:.15s;">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(16,185,129,.2),rgba(6,182,212,.2));border:1px solid rgba(16,185,129,.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 24px;">02</div>
+        <h3 style="font-size:20px;font-weight:800;margin-bottom:12px;">Adaptive Sessions</h3>
+        <p style="color:rgba(255,255,255,.4);font-size:14px;line-height:1.6;">Daily AI-curated study sessions. The engine identifies weak spots after every session and restructures your plan.</p>
+      </div>
+      <div class="card reveal" style="padding:40px;text-align:center;transition-delay:.25s;">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(139,92,246,.2),rgba(236,72,153,.2));border:1px solid rgba(139,92,246,.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 24px;">03</div>
+        <h3 style="font-size:20px;font-weight:800;margin-bottom:12px;">Score. Apply. Succeed.</h3>
+        <p style="color:rgba(255,255,255,.4);font-size:14px;line-height:1.6;">Track your score trajectory, complete your AMCAS application log, and walk into interviews with AI-rehearsed confidence.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ QUIZ PREVIEW ══════════════ -->
+<section id="quizzes" style="padding:0 24px 120px;">
+  <div style="max-width:1280px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+      <div class="reveal-left">
+        <div style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:100px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:24px;">Quiz Library</div>
+        <h2 style="font-size:clamp(32px,4vw,56px);font-weight:900;letter-spacing:-.04em;line-height:1;margin-bottom:20px;">1,500 exams.<br/><span class="grad-blue">Zero repetition.</span></h2>
+        <p style="color:rgba(255,255,255,.45);font-size:16px;line-height:1.65;margin-bottom:32px;">Every quiz is engineered with strict answer variation — no predictable patterns, no repeated correct-answer streaks. The same intelligence you need for the real MCAT.</p>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:36px;">
+          <div style="display:flex;align-items:center;gap:12px;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(16,185,129,.2);border:1px solid rgba(16,185,129,.4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">✓</div><span style="font-size:14px;color:rgba(255,255,255,.6);">Auto-graded with 2nd and 3rd-order MCAT logic</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(16,185,129,.2);border:1px solid rgba(16,185,129,.4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">✓</div><span style="font-size:14px;color:rgba(255,255,255,.6);">Detailed explanations with clinical correlates</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(16,185,129,.2);border:1px solid rgba(16,185,129,.4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">✓</div><span style="font-size:14px;color:rgba(255,255,255,.6);">Scores feed directly into your adaptive profile</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(16,185,129,.2);border:1px solid rgba(16,185,129,.4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">✓</div><span style="font-size:14px;color:rgba(255,255,255,.6);">Countdown timer with difficulty badges</span></div>
+        </div>
+        <button onclick="openAuth('signup')" class="btn-blue" style="padding:14px 32px;font-size:15px;">Access All Quizzes →</button>
+      </div>
+
+      <div class="reveal-right">
+        <div style="background:rgba(8,8,20,.6);border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:28px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <div style="font-size:15px;font-weight:700;">Quiz Library</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.3);">1,500 exams</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;" id="catPills">
+            <div class="cat-pill active">All</div>
+            <div class="cat-pill">Bio/Biochem</div>
+            <div class="cat-pill">Chem/Phys</div>
+            <div class="cat-pill">Psych/Soc</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;" id="quizList">
+            <!-- populated by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ TESTIMONIALS ══════════════ -->
+<section style="padding:0 24px 120px;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;margin-bottom:64px;">
+      <h2 style="font-size:clamp(32px,4vw,56px);font-weight:900;letter-spacing:-.04em;margin-bottom:16px;">Trusted by premeds<br/><span class="grad-blue">at top schools.</span></h2>
+      <p style="color:rgba(255,255,255,.4);font-size:16px;">From first-generation students to legacy admits — the platform that levels the playing field.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <div class="test-card reveal" style="transition-delay:.05s;">
+        <div style="display:flex;gap:3px;margin-bottom:16px;">★★★★★</div>
+        <p style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.7;margin-bottom:20px;">"The adaptive quiz engine is unlike anything I've used. It identified my weaknesses in Biochemistry and within 3 weeks I went from a 126 to a 130 in the Bio section. This app is the real deal."</p>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;">S</div>
+          <div><div style="font-size:13px;font-weight:700;">Sarah K.</div><div style="font-size:11px;color:rgba(255,255,255,.3);">Harvard Medical School · Class of 2028</div></div>
+        </div>
+      </div>
+      <div class="test-card reveal" style="transition-delay:.15s;border-color:rgba(59,130,246,.2);">
+        <div style="display:flex;gap:3px;margin-bottom:16px;">★★★★★</div>
+        <p style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.7;margin-bottom:20px;">"I tried Anki, Khan Academy, and every prep company out there. Nothing came close. The AI coach explained pharmacology in a way my professors never could. I got a 522 on my third attempt."</p>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#10b981,#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;">M</div>
+          <div><div style="font-size:13px;font-weight:700;">Marcus T.</div><div style="font-size:11px;color:rgba(255,255,255,.3);">Johns Hopkins · MCAT 522</div></div>
+        </div>
+      </div>
+      <div class="test-card reveal" style="transition-delay:.25s;">
+        <div style="display:flex;gap:3px;margin-bottom:16px;">★★★★★</div>
+        <p style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.7;margin-bottom:20px;">"The AMCAS vault saved me weeks of scrambling before the deadline. Having all my clinical hours automatically formatted was incredible. Every premed needs this app."</p>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#ec4899);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;">A</div>
+          <div><div style="font-size:13px;font-weight:700;">Aisha R.</div><div style="font-size:11px;color:rgba(255,255,255,.3);">Stanford Medicine · First-gen MD</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FINAL CTA ══════════════ -->
+<section style="padding:0 24px 120px;text-align:center;overflow:hidden;position:relative;">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:400px;background:radial-gradient(ellipse at center,rgba(59,130,246,.12) 0%,transparent 70%);pointer-events:none;"></div>
+  <div class="reveal" style="position:relative;z-index:1;">
+    <h2 style="font-size:clamp(44px,8vw,100px);font-weight:900;letter-spacing:-.05em;line-height:.9;margin-bottom:40px;">
+      Study smarter.<br/><span class="grad-blue">Don't work harder.</span>
+    </h2>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;">
+      <button onclick="openAuth('signup')" class="btn-primary" style="font-size:18px;padding:18px 44px;">
+        Open Your Workspace
+      </button>
+      <button onclick="openAuth('login')" class="btn-outline" style="font-size:18px;padding:18px 44px;">
+        Sign In
+      </button>
+    </div>
+    <p style="color:rgba(255,255,255,.3);font-size:14px;font-weight:500;">Free forever. No credit card required. Join 20,000+ premeds.</p>
+  </div>
+</section>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer style="border-top:1px solid rgba(255,255,255,.05);padding:56px 24px 40px;">
+  <div style="max-width:1280px;margin:0 auto;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:40px;margin-bottom:56px;">
+      <div style="max-width:260px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:white;">M</div>
+          <span style="font-weight:800;font-size:16px;">MedSchoolPrep</span>
+        </div>
+        <p style="color:rgba(255,255,255,.3);font-size:13px;line-height:1.6;">The everything app for premeds. Adaptive MCAT prep, AI coaching, and application tools — all synchronized.</p>
+      </div>
+      <div style="display:flex;gap:64px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:16px;">Product</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Features</a>
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Quiz Library</a>
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Pricing</a>
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Changelog</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:16px;">Resources</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Blog</a>
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Study Guides</a>
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">MCAT Roadmap</a>
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Community</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.05);padding-top:28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <span style="font-size:12px;color:rgba(255,255,255,.2);">© 2025 MedSchoolPrep. All rights reserved.</span>
+      <div style="display:flex;gap:20px;">
+        <a href="#" style="font-size:12px;color:rgba(255,255,255,.2);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='rgba(255,255,255,.5)'" onmouseout="this.style.color='rgba(255,255,255,.2)'">Privacy</a>
+        <a href="#" style="font-size:12px;color:rgba(255,255,255,.2);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='rgba(255,255,255,.5)'" onmouseout="this.style.color='rgba(255,255,255,.2)'">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════ AUTH MODAL ══════════════ -->
+<div class="modal-bg" id="authModal">
+  <div style="width:100%;max-width:440px;background:#0b0f1a;border:1px solid rgba(255,255,255,.08);border-radius:28px;padding:44px;position:relative;margin:16px;" onclick="event.stopPropagation()">
+    <button onclick="closeAuth()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:18px;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.4)'">✕</button>
+
+    <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:26px;color:white;margin-bottom:28px;box-shadow:0 0 40px rgba(59,130,246,.4);">M</div>
+
+    <!-- Views -->
+    <div id="loginView">
+      <h2 style="font-size:28px;font-weight:900;margin-bottom:6px;letter-spacing:-.03em;">Welcome back.</h2>
+      <p style="color:rgba(255,255,255,.4);margin-bottom:32px;font-size:14px;">Ready to continue your session?</p>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <input class="modal-input" type="email" id="loginEmail" placeholder="Email address"/>
+        <input class="modal-input" type="password" id="loginPass" placeholder="Password"/>
+        <div id="loginErr" style="font-size:13px;color:#f87171;display:none;padding:10px 14px;background:rgba(248,113,113,.08);border-radius:10px;border:1px solid rgba(248,113,113,.2);"></div>
+        <button onclick="doLogin()" class="btn-primary" style="padding:14px;font-size:15px;width:100%;">Sign In</button>
+        <div style="display:flex;justify-content:space-between;font-size:13px;">
+          <button onclick="switchView('signup')" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:13px;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.4)'">Create account</button>
+          <button onclick="switchView('forgot')" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:13px;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.4)'">Forgot password?</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="signupView" style="display:none;">
+      <h2 style="font-size:28px;font-weight:900;margin-bottom:6px;letter-spacing:-.03em;">Create account.</h2>
+      <p style="color:rgba(255,255,255,.4);margin-bottom:32px;font-size:14px;">Start your journey to medical school today.</p>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <input class="modal-input" type="text" id="signupName" placeholder="Full name"/>
+        <input class="modal-input" type="email" id="signupEmail" placeholder="Email address"/>
+        <input class="modal-input" type="password" id="signupPass" placeholder="Password (min 6 characters)"/>
+        <input class="modal-input" type="password" id="signupPass2" placeholder="Confirm password"/>
+        <div id="signupErr" style="font-size:13px;color:#f87171;display:none;padding:10px 14px;background:rgba(248,113,113,.08);border-radius:10px;border:1px solid rgba(248,113,113,.2);"></div>
+        <div id="signupOk" style="font-size:13px;color:#34d399;display:none;padding:10px 14px;background:rgba(52,211,153,.06);border-radius:10px;border:1px solid rgba(52,211,153,.2);"></div>
+        <button onclick="doSignup()" class="btn-primary" style="padding:14px;font-size:15px;width:100%;">Create Account</button>
+        <button onclick="switchView('login')" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:13px;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.4)'">Already have an account? Sign in</button>
+      </div>
+    </div>
+
+    <div id="forgotView" style="display:none;">
+      <h2 style="font-size:28px;font-weight:900;margin-bottom:6px;letter-spacing:-.03em;">Reset password.</h2>
+      <p style="color:rgba(255,255,255,.4);margin-bottom:32px;font-size:14px;">We'll send a 6-digit code to your email.</p>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <input class="modal-input" type="email" id="forgotEmail" placeholder="Email address"/>
+        <div id="forgotCodeSection" style="display:none;flex-direction:column;gap:14px;">
+          <div style="font-size:13px;color:#34d399;padding:10px 14px;background:rgba(52,211,153,.06);border-radius:10px;border:1px solid rgba(52,211,153,.2);" id="forgotMsg"></div>
+          <input class="modal-input" type="text" id="forgotCode" placeholder="Enter 6-digit code" maxlength="6"/>
+          <input class="modal-input" type="password" id="forgotNewPass" placeholder="New password"/>
+        </div>
+        <div id="forgotErr" style="font-size:13px;color:#f87171;display:none;padding:10px 14px;background:rgba(248,113,113,.08);border-radius:10px;border:1px solid rgba(248,113,113,.2);"></div>
+        <button onclick="doForgot()" id="forgotBtn" class="btn-primary" style="padding:14px;font-size:15px;width:100%;">Send Reset Code</button>
+        <button onclick="switchView('login')" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:13px;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.4)'">← Back to sign in</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── MOUSE GRID TRACKING ──
+const grid = document.getElementById('grid-canvas');
+document.addEventListener('mousemove', e => {
+  const x = (e.clientX / window.innerWidth * 100).toFixed(1);
+  const y = (e.clientY / window.innerHeight * 100).toFixed(1);
+  grid.style.setProperty('--mx', x + '%');
+  grid.style.setProperty('--my', y + '%');
+});
+
+// ── 3D MOCKUP ──
+const mockup = document.getElementById('mockup3d');
+document.addEventListener('mousemove', e => {
+  const xR = ((window.innerWidth / 2 - e.clientX) / 60).toFixed(2);
+  const yR = ((e.clientY - window.innerHeight / 2) / 60).toFixed(2);
+  mockup.style.transform = `rotateY(${xR}deg) rotateX(${-yR}deg)`;
+});
+
+// ── SCROLL REVEAL ──
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => ro.observe(el));
+
+// ── NAV LINKS DESKTOP ──
+if (window.innerWidth > 768) {
+  document.getElementById('navLinks').style.display = 'flex';
+}
+window.addEventListener('resize', () => {
+  document.getElementById('navLinks').style.display = window.innerWidth > 768 ? 'flex' : 'none';
+});
+
+// ── MARQUEE PILLS ──
+const topics = ['Glycolysis','Acid-Base Eq.','Newton\'s Laws','Cori Cycle','CARS Strategy','Stereochemistry','Nerve Impulse','MMI Prep','Krebs Cycle','Hardy-Weinberg','Electrochemistry','Protein Folding','Social Influence','Fluid Dynamics','DNA Replication','Cognitive Bias','Thermodynamics','Enzyme Kinetics','Memory Systems','AMCAS Essays','Organic Rxns','Cell Signaling','Hess\'s Law','Operant Cond.'];
+const colors = ['rgba(59,130,246,.12)','rgba(16,185,129,.1)','rgba(139,92,246,.1)','rgba(249,115,22,.1)','rgba(6,182,212,.1)'];
+const tcolors = ['#93c5fd','#6ee7b7','#c4b5fd','#fb923c','#67e8f9'];
+function buildMarquee(id) {
+  const el = document.getElementById(id);
+  topics.forEach((t,i) => {
+    const d = document.createElement('div');
+    const ci = i % colors.length;
+    d.style.cssText = `padding:8px 18px;border-radius:100px;border:1px solid rgba(255,255,255,0.08);background:${colors[ci]};font-size:13px;font-weight:600;color:${tcolors[ci]};white-space:nowrap;`;
+    d.textContent = t;
+    el.appendChild(d);
+  });
+}
+buildMarquee('marq1');
+buildMarquee('marq2');
+
+// ── QUIZ LIST PREVIEW ──
+const quizSamples = [
+  { title:'Glycolysis & Regulation', cat:'Bio/Biochem', diff:'Hard', qs:15, score:null },
+  { title:'Acid-Base Equilibria', cat:'Chem/Phys', diff:'Hard', qs:15, score:84 },
+  { title:'Social Psychology', cat:'Psych/Soc', diff:'Medium', qs:15, score:null },
+  { title:'TCA Cycle & ETC', cat:'Bio/Biochem', diff:'Hard', qs:15, score:71 },
+  { title:'Thermodynamics', cat:'Chem/Phys', diff:'Hard', qs:15, score:null },
+];
+const diffColors = { Hard:'rgba(239,68,68,.15)', Medium:'rgba(245,158,11,.15)', Easy:'rgba(16,185,129,.12)' };
+const diffText = { Hard:'#f87171', Medium:'#fbbf24', Easy:'#34d399' };
+const ql = document.getElementById('quizList');
+quizSamples.forEach(q => {
+  const d = document.createElement('div');
+  d.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);gap:12px;transition:background .2s;cursor:pointer;';
+  d.onmouseover = () => d.style.background = 'rgba(59,130,246,0.08)';
+  d.onmouseout = () => d.style.background = 'rgba(255,255,255,0.03)';
+  d.innerHTML = `
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:13px;font-weight:700;color:white;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${q.title}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:2px;">${q.cat} · ${q.qs} questions</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+      <span style="padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;background:${diffColors[q.diff]};color:${diffText[q.diff]};">${q.diff}</span>
+      ${q.score ? `<span style="font-size:12px;font-weight:700;color:#34d399;">${q.score}%</span>` : `<button onclick="openAuth('signup')" style="padding:5px 12px;border-radius:20px;background:rgba(59,130,246,.2);border:1px solid rgba(59,130,246,.3);color:#93c5fd;font-size:11px;font-weight:700;cursor:pointer;">Start</button>`}
+    </div>`;
+  ql.appendChild(d);
+});
+
+// ── CATEGORY PILLS ──
+document.querySelectorAll('.cat-pill').forEach(p => {
+  p.addEventListener('click', () => {
+    document.querySelectorAll('.cat-pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+  });
+});
+
+// ── AUTH ──
+function hashPw(s) {
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h) + s.charCodeAt(i) | 0;
+  return (h >>> 0).toString(16);
+}
+
+function openAuth(view) {
+  document.getElementById('authModal').classList.add('open');
+  switchView(view);
+}
+function closeAuth() {
+  document.getElementById('authModal').classList.remove('open');
+}
+document.getElementById('authModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('authModal')) closeAuth();
+});
+
+function switchView(v) {
+  ['loginView','signupView','forgotView'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById(v + 'View').style.display = 'block';
+  clearErrors();
+}
+
+function showErr(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function clearErrors() {
+  ['loginErr','signupErr','forgotErr','signupOk'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = ''; el.style.display = 'none'; }
+  });
+}
+
+function doLogin() {
+  clearErrors();
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass = document.getElementById('loginPass').value;
+  if (!email.includes('@')) return showErr('loginErr', 'Please enter a valid email address.');
+  if (!pass) return showErr('loginErr', 'Please enter your password.');
+  const users = JSON.parse(localStorage.getItem('msp_users') || '{}');
+  const user = users[email];
+  if (!user || user.hash !== hashPw(pass)) return showErr('loginErr', 'Incorrect email or password.');
+  localStorage.setItem('msp_session', JSON.stringify({ email, name: user.name, at: Date.now() }));
+  closeAuth();
+  window.location.href = 'src/main.jsx' in window ? './src/main.jsx' : './index.html#app';
+  // For the actual app, redirect to the React app
+  window.location.href = './';
+}
+
+function doSignup() {
+  clearErrors();
+  const name = document.getElementById('signupName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+  const pass = document.getElementById('signupPass').value;
+  const pass2 = document.getElementById('signupPass2').value;
+  if (!name) return showErr('signupErr', 'Please enter your full name.');
+  if (!email.includes('@')) return showErr('signupErr', 'Please enter a valid email address.');
+  if (pass.length < 6) return showErr('signupErr', 'Password must be at least 6 characters.');
+  if (pass !== pass2) return showErr('signupErr', "Passwords don't match.");
+  const users = JSON.parse(localStorage.getItem('msp_users') || '{}');
+  if (users[email]) return showErr('signupErr', 'An account with this email already exists.');
+  users[email] = { name, hash: hashPw(pass), created: Date.now() };
+  localStorage.setItem('msp_users', JSON.stringify(users));
+  localStorage.setItem('msp_session', JSON.stringify({ email, name, at: Date.now() }));
+  document.getElementById('signupOk').textContent = `Welcome, ${name}! Account created. Redirecting...`;
+  document.getElementById('signupOk').style.display = 'block';
+  setTimeout(() => {
+    closeAuth();
+    window.location.reload();
+  }, 1400);
+}
+
+let forgotCode = null;
+function doForgot() {
+  clearErrors();
+  const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+  const codeInput = document.getElementById('forgotCode').value.trim();
+  const newPass = document.getElementById('forgotNewPass').value;
+  const btn = document.getElementById('forgotBtn');
+  const codeSection = document.getElementById('forgotCodeSection');
+
+  if (!forgotCode) {
+    if (!email.includes('@')) return showErr('forgotErr', 'Please enter a valid email address.');
+    const users = JSON.parse(localStorage.getItem('msp_users') || '{}');
+    if (!users[email]) return showErr('forgotErr', 'No account found with this email.');
+    forgotCode = Math.floor(100000 + Math.random() * 900000).toString();
+    localStorage.setItem('msp_reset_' + email, JSON.stringify({ code: forgotCode, exp: Date.now() + 15 * 60 * 1000 }));
+    codeSection.style.display = 'flex';
+    document.getElementById('forgotMsg').textContent = `Code generated (demo): ${forgotCode}`;
+    btn.textContent = 'Reset Password';
+    return;
+  }
+
+  const stored = JSON.parse(localStorage.getItem('msp_reset_' + email) || 'null');
+  if (!stored || stored.code !== codeInput) return showErr('forgotErr', 'Invalid code. Please try again.');
+  if (Date.now() > stored.exp) { forgotCode = null; return showErr('forgotErr', 'Code expired. Please request a new one.'); }
+  if (newPass.length < 6) return showErr('forgotErr', 'Password must be at least 6 characters.');
+  const users = JSON.parse(localStorage.getItem('msp_users') || '{}');
+  users[email].hash = hashPw(newPass);
+  localStorage.setItem('msp_users', JSON.stringify(users));
+  localStorage.removeItem('msp_reset_' + email);
+  forgotCode = null;
+  codeSection.style.display = 'none';
+  document.getElementById('forgotMsg').textContent = '';
+  btn.textContent = 'Send Reset Code';
+  const ok = document.getElementById('forgotErr');
+  ok.style.cssText = 'font-size:13px;color:#34d399;display:block;padding:10px 14px;background:rgba(52,211,153,.06);border-radius:10px;border:1px solid rgba(52,211,153,.2);';
+  ok.textContent = 'Password updated! You can now sign in.';
+  setTimeout(() => switchView('login'), 1500);
+}
+
+// ── ESC TO CLOSE ──
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeAuth();
+});
+
+// ── CHECK EXISTING SESSION ──
+const sess = localStorage.getItem('msp_session');
+if (sess) {
+  try {
+    const s = JSON.parse(sess);
+    if (s && s.name) {
+      const btns = document.querySelectorAll('[onclick="openAuth(\'signup\')"]');
+      btns.forEach(b => { b.textContent = `Continue as ${s.name.split(' ')[0]} →`; });
+    }
+  } catch(e) {}
+}
+</script>
+
 </body>
 </html>
