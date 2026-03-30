@@ -4,468 +4,202 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MedSchoolPrep — The Everything App for Premeds</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet"/>
-
+<script src="https://cdn.tailwindcss.com"></script>
 <style>
-/* ═══════════════════════════════════════════
-   FOUNDATIONS
-═══════════════════════════════════════════ */
-:root {
-  --bg:       #030014;
-  --bg2:      #06001f;
-  --surface:  rgba(10,8,30,0.55);
-  --blue:     #3b82f6;
-  --indigo:   #6366f1;
-  --emerald:  #10b981;
-  --purple:   #8b5cf6;
-  --rose:     #f43f5e;
-  --amber:    #f59e0b;
-  --cyan:     #06b6d4;
-  --border:   rgba(255,255,255,0.065);
-  --border-h: rgba(255,255,255,0.13);
-  --text-dim: rgba(255,255,255,0.38);
-  --text-mid: rgba(255,255,255,0.58);
-  --r-card:   24px;
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { background: var(--bg); scroll-behavior: smooth; }
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  color: #f5f3ff;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  letter-spacing: -0.01em;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root { --bg:#030014; --blue:#3b82f6; --indigo:#6366f1; --emerald:#10b981; --purple:#8b5cf6; }
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+html{background:var(--bg);}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:#fafafa;
+  overflow-x:hidden;
+  letter-spacing:-0.02em;
 }
 
 /* ── GRID CANVAS ── */
-#grid-canvas {
-  position: fixed; inset: 0; z-index: -5;
+#grid-canvas{
+  position:fixed;inset:0;z-index:-5;
   background-image:
-    linear-gradient(to right, rgba(255,255,255,0.028) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.028) 1px, transparent 1px);
-  background-size: 56px 56px;
-  -webkit-mask-image: radial-gradient(ellipse 80% 60% at var(--mx,50%) var(--my,40%), black 0%, transparent 100%);
-  mask-image: radial-gradient(ellipse 80% 60% at var(--mx,50%) var(--my,40%), black 0%, transparent 100%);
-  transition: --mx 0.1s, --my 0.1s;
+    linear-gradient(to right,rgba(255,255,255,0.035) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(255,255,255,0.035) 1px,transparent 1px);
+  background-size:52px 52px;
+  -webkit-mask-image:radial-gradient(circle at var(--mx,50%) var(--my,50%),black 0%,transparent 75%);
+  mask-image:radial-gradient(circle at var(--mx,50%) var(--my,50%),black 0%,transparent 75%);
 }
 
 /* ── GRAIN ── */
-.grain {
-  position: fixed; inset: 0; z-index: -3;
-  opacity: 0.022; pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-repeat: repeat; background-size: 180px;
+.grain{
+  position:fixed;inset:0;z-index:-4;opacity:0.025;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat:repeat;background-size:200px 200px;
 }
 
-/* ── AMBIENT GLOWS ── */
-.halo {
-  position: absolute; border-radius: 50%; pointer-events: none;
-  filter: blur(80px);
+/* ── AMBIENT LIGHTS ── */
+.ray-hero{
+  position:absolute;top:-280px;left:50%;transform:translateX(-50%);
+  width:1200px;height:700px;pointer-events:none;
+  background:radial-gradient(50% 50% at 50% 0%,rgba(59,130,246,0.18) 0%,transparent 100%);
+  filter:blur(80px);z-index:0;
 }
-.halo-hero-top {
-  top: -200px; left: 50%; transform: translateX(-50%);
-  width: 1100px; height: 600px;
-  background: radial-gradient(50% 50% at 50% 0%, rgba(59,130,246,0.16) 0%, transparent 100%);
-}
-.halo-hero-l {
-  top: 10%; left: -120px; width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(99,102,241,0.09) 0%, transparent 70%);
-}
-.halo-hero-r {
-  top: 20%; right: -80px; width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%);
+.glow-blue{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,rgba(59,130,246,0.12) 0%,transparent 70%);
+  filter:blur(60px);pointer-events:none;
 }
 
 /* ── NAV ── */
-nav {
-  position: fixed; width: 100%; top: 0; z-index: 400;
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
-  background: rgba(3,0,20,0.55);
+nav{
+  position:fixed;width:100%;top:0;z-index:200;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  background:rgba(3,0,20,0.6);
 }
-.nav-inner {
-  max-width: 1320px; margin: 0 auto; padding: 0 28px;
-  height: 62px; display: flex; align-items: center; justify-content: space-between;
-}
-.nav-logo {
-  display: flex; align-items: center; gap: 10px; cursor: pointer;
-  text-decoration: none;
-}
-.nav-logo-icon {
-  width: 34px; height: 34px; border-radius: 10px;
-  background: linear-gradient(135deg, #3b82f6, #6366f1);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Syne', sans-serif; font-weight: 800;
-  font-size: 16px; color: white;
-  transition: transform 0.35s cubic-bezier(0.23,1,0.32,1);
-  box-shadow: 0 0 20px rgba(99,102,241,0.35);
-}
-.nav-logo-icon:hover { transform: rotate(10deg) scale(1.08); }
-.nav-logo-text {
-  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px;
-  color: white; letter-spacing: -0.03em;
-}
-.nav-links {
-  display: flex; gap: 28px;
-}
-.nav-links a {
-  font-size: 13px; font-weight: 500; color: var(--text-dim);
-  text-decoration: none; transition: color 0.2s; letter-spacing: -0.01em;
-}
-.nav-links a:hover { color: white; }
-.nav-actions { display: flex; align-items: center; gap: 10px; }
-
-/* ── TYPOGRAPHY ── */
-.display {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  letter-spacing: -0.05em;
-  line-height: 0.93;
-}
-.display-sm {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1.0;
-}
-.grad-blue { background: linear-gradient(135deg, #60a5fa 0%, #818cf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.grad-green { background: linear-gradient(135deg, #34d399 0%, #22d3ee 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.grad-purple { background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
 /* ── BUTTONS ── */
-.btn {
-  display: inline-flex; align-items: center; gap: 7px;
-  font-family: 'DM Sans', sans-serif; font-weight: 700;
-  border-radius: 100px; border: none; cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.23,1,0.32,1);
-  white-space: nowrap; letter-spacing: -0.01em;
-  text-decoration: none;
+.btn-primary{
+  position:relative;overflow:hidden;
+  background:white;color:#030014;
+  font-weight:900;border-radius:9999px;
+  transition:all .3s ease;cursor:pointer;border:none;
 }
-.btn-primary {
-  background: white; color: #030014; font-size: 15px; padding: 12px 28px;
-  position: relative; overflow: hidden;
+.btn-primary::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(0,0,0,0.08),transparent);
+  transform:translateX(-100%);transition:.5s;
 }
-.btn-primary::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.07), transparent);
-  transform: translateX(-100%); transition: 0.5s;
-}
-.btn-primary:hover { transform: scale(1.04); box-shadow: 0 0 32px rgba(255,255,255,0.18); }
-.btn-primary:hover::before { transform: translateX(100%); }
-.btn-ghost {
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-  color: white; font-size: 15px; padding: 12px 28px;
-}
-.btn-ghost:hover { background: rgba(255,255,255,0.11); border-color: rgba(255,255,255,0.2); }
-.btn-blue {
-  background: var(--blue); color: white; font-size: 13px; padding: 9px 22px;
-}
-.btn-blue:hover { box-shadow: 0 0 28px rgba(59,130,246,0.5); transform: scale(1.02); }
-.btn-sm { font-size: 12px !important; padding: 7px 16px !important; }
-.btn-nav-signin {
-  font-size: 13px; font-weight: 600; color: var(--text-mid); background: none;
-  border: none; cursor: pointer; padding: 8px 14px; transition: color 0.2s;
-  font-family: 'DM Sans', sans-serif;
-}
-.btn-nav-signin:hover { color: white; }
+.btn-primary:hover::before{transform:translateX(100%);}
+.btn-primary:hover{transform:scale(1.03);box-shadow:0 0 30px rgba(255,255,255,0.2);}
 
-/* ── CARDS ── */
-.card {
-  background: var(--surface);
-  backdrop-filter: blur(14px);
-  border: 1px solid var(--border);
-  border-radius: var(--r-card);
-  transition: border-color 0.4s, box-shadow 0.4s, transform 0.4s cubic-bezier(0.23,1,0.32,1), background 0.4s;
+.btn-outline{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  color:white;font-weight:700;
+  border-radius:9999px;cursor:pointer;
+  transition:all .3s;
 }
-.card:hover {
-  border-color: rgba(59,130,246,0.22);
-  background: rgba(12,10,35,0.7);
-  transform: translateY(-5px);
-  box-shadow: 0 20px 52px rgba(0,0,0,0.45), 0 0 0 1px rgba(59,130,246,0.08);
+.btn-outline:hover{background:rgba(255,255,255,0.12);}
+
+.btn-blue{
+  background:var(--blue);color:white;
+  font-weight:700;border-radius:9999px;
+  border:none;cursor:pointer;
+  transition:all .3s;
+  box-shadow:0 0 0 rgba(59,130,246,0);
+}
+.btn-blue:hover{box-shadow:0 0 24px rgba(59,130,246,0.45);transform:scale(1.02);}
+
+/* ── BENTO CARDS ── */
+.card{
+  background:rgba(8,8,20,0.5);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.06);
+  transition:all .5s cubic-bezier(.23,1,.32,1);
+  border-radius:28px;
+}
+.card:hover{
+  border-color:rgba(59,130,246,0.25);
+  background:rgba(12,12,28,0.65);
+  transform:translateY(-6px);
+  box-shadow:0 24px 60px rgba(0,0,0,0.4);
 }
 
-/* ── SECTION LABEL ── */
-.section-label {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 5px 14px; border-radius: 100px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.04);
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--text-dim);
-  margin-bottom: 20px;
-}
-
-/* ── PING ── */
-@keyframes ping2 { 75%,100%{ transform:scale(2.2); opacity:0; } }
-.ping { animation: ping2 1.5s cubic-bezier(0,0,0.2,1) infinite; }
-
-/* ── MARQUEE ── */
-.marquee-track { display:flex; gap:0; width:max-content; animation:marquee 30s linear infinite; }
-@keyframes marquee { from{transform:translateX(0);} to{transform:translateX(-50%);} }
-.marquee-track:hover { animation-play-state:paused; }
-
-/* ── SCROLL REVEAL ── */
-.rev { opacity:0; transform:translateY(48px); transition:opacity 0.95s cubic-bezier(0.16,1,0.3,1), transform 0.95s cubic-bezier(0.16,1,0.3,1); }
-.rev-l { opacity:0; transform:translateX(-48px); transition:opacity 0.95s cubic-bezier(0.16,1,0.3,1), transform 0.95s cubic-bezier(0.16,1,0.3,1); }
-.rev-r { opacity:0; transform:translateX(48px); transition:opacity 0.95s cubic-bezier(0.16,1,0.3,1), transform 0.95s cubic-bezier(0.16,1,0.3,1); }
-.rev.vis, .rev-l.vis, .rev-r.vis { opacity:1; transform:translate(0); }
-
-/* ── FEAT ICON ── */
-.feat-icon {
-  width:46px; height:46px; border-radius:13px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:20px; flex-shrink:0; margin-bottom:22px;
-}
-
-/* ── PROGRESS BARS ── */
-.pbar { height:3px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden; margin-top:8px; }
-.pbar-fill { height:100%; border-radius:3px; transition:width 1.4s cubic-bezier(0.16,1,0.3,1); }
+/* ── REVEAL ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(44px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-44px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1);}
+.reveal-left.visible{opacity:1;transform:translateX(0);}
+.reveal-right{opacity:0;transform:translateX(44px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1);}
+.reveal-right.visible{opacity:1;transform:translateX(0);}
 
 /* ── MOCKUP 3D ── */
-.mock-wrap { perspective:2600px; transform-style:preserve-3d; }
-.mock-3d {
-  transition:transform 0.1s ease-out;
-  box-shadow: 0 64px 128px -24px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.06);
-  border-radius:18px; overflow:hidden;
+.mockup-wrap{perspective:2400px;transform-style:preserve-3d;}
+.mockup-3d{
+  transition:transform .12s ease-out;
+  box-shadow:0 60px 120px -20px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06);
+  border-radius:18px;overflow:hidden;
 }
 
-/* ══════════════════════════════════
-   SPECIALTY PATH SELECTOR
-══════════════════════════════════ */
-.spec-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 32px;
-}
-.spec-card {
-  position: relative;
-  padding: 18px 16px;
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  background: rgba(8,6,24,0.5);
-  cursor: pointer;
-  transition: all 0.28s cubic-bezier(0.23,1,0.32,1);
-  overflow: hidden;
-  text-align: center;
-}
-.spec-card::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: var(--spec-glow, transparent);
-  opacity: 0; transition: opacity 0.3s;
-  border-radius: inherit;
-}
-.spec-card:hover { transform: translateY(-3px); border-color: var(--spec-color, rgba(255,255,255,0.18)); }
-.spec-card:hover::before { opacity: 1; }
-.spec-card.selected {
-  border-color: var(--spec-color, var(--blue));
-  background: rgba(12,10,32,0.8);
-  box-shadow: 0 0 0 1px var(--spec-color, var(--blue)), 0 8px 32px rgba(0,0,0,0.4);
-}
-.spec-card.selected::before { opacity: 1; }
-.spec-emoji { font-size: 24px; margin-bottom: 8px; display: block; }
-.spec-name { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; letter-spacing:-0.02em; color: white; display:block; margin-bottom:4px; }
-.spec-meta { font-size: 10px; color: var(--text-dim); }
+/* ── PING DOT ── */
+@keyframes ping2{75%,100%{transform:scale(2);opacity:0;}}
+.ping-dot{animation:ping2 1.4s cubic-bezier(0,0,.2,1) infinite;}
 
-/* ── PATH TREE ── */
-.path-container {
-  position: relative;
-  transition: opacity 0.25s, transform 0.35s cubic-bezier(0.16,1,0.3,1);
-}
-.path-container.exiting {
-  opacity: 0; transform: translateX(-16px);
-}
-.path-container.entering {
-  opacity: 0; transform: translateX(16px);
-}
-
-.path-unit-header {
-  display: flex; align-items: center; gap: 12px;
-  padding: 14px 18px; border-radius: 14px;
-  border: 1px solid var(--unit-color-border, rgba(59,130,246,0.25));
-  background: var(--unit-color-bg, rgba(59,130,246,0.07));
-  margin-bottom: 0;
-}
-.path-unit-num {
-  font-size: 9px; font-weight: 700; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--unit-color, #60a5fa);
-  white-space: nowrap;
-}
-.path-unit-title {
-  font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
-  color: white; letter-spacing: -0.02em; flex: 1;
-}
-.path-unit-badge {
-  font-size: 10px; font-weight: 700; padding: 3px 10px;
-  border-radius: 100px;
-  background: var(--unit-color-bg, rgba(59,130,246,0.12));
-  color: var(--unit-color, #60a5fa);
-  border: 1px solid var(--unit-color-border, rgba(59,130,246,0.25));
-  white-space: nowrap;
-}
-
-.path-nodes { display: flex; flex-direction: column; padding-left: 20px; position: relative; }
-.path-nodes::before {
-  content: '';
-  position: absolute; left: 8px; top: 0; bottom: 0; width: 1px;
-  background: linear-gradient(to bottom, var(--unit-color, rgba(59,130,246,0.4)) 0%, rgba(255,255,255,0.06) 100%);
-}
-
-.path-node {
-  display: flex; align-items: center; gap: 14px;
-  padding: 12px 14px; margin: 0;
-  position: relative; cursor: pointer;
-  transition: all 0.22s;
-  border-radius: 12px;
-}
-.path-node:hover:not(.locked) {
-  background: rgba(255,255,255,0.03);
-}
-.path-node.locked { opacity: 0.38; cursor: default; }
-
-.node-dot {
-  width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 9px; position: relative; z-index: 1;
-  margin-left: -26px;
-  transition: box-shadow 0.3s;
-}
-.node-dot.lesson { background: rgba(59,130,246,0.25); border: 1.5px solid rgba(59,130,246,0.6); }
-.node-dot.practice { background: rgba(99,102,241,0.25); border: 1.5px solid rgba(99,102,241,0.6); }
-.node-dot.mastery { background: rgba(245,158,11,0.25); border: 1.5px solid rgba(245,158,11,0.6); }
-.node-dot.nd-locked { background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.12); font-size:8px; }
-.node-dot.nd-mastered { background: rgba(16,185,129,0.3); border: 1.5px solid rgba(16,185,129,0.7); box-shadow: 0 0 10px rgba(16,185,129,0.3); }
-.path-node:hover .node-dot.lesson { box-shadow: 0 0 12px rgba(59,130,246,0.4); }
-.path-node:hover .node-dot.practice { box-shadow: 0 0 12px rgba(99,102,241,0.4); }
-
-.node-type-badge {
-  font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
-  text-transform: uppercase; margin-bottom: 2px;
-}
-.node-type-badge.lesson { color: rgba(96,165,250,0.8); }
-.node-type-badge.practice { color: rgba(167,139,250,0.8); }
-.node-type-badge.mastery { color: rgba(251,191,36,0.8); }
-
-.node-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); letter-spacing: -0.02em; }
-.node-meta { font-size: 11px; color: var(--text-dim); margin-top: 1px; }
-
-.mastery-pips {
-  display: flex; gap: 4px; margin-left: auto; flex-shrink: 0;
-}
-.pip {
-  width: 7px; height: 7px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.2);
-  transition: all 0.3s;
-}
-.pip.filled { background: #10b981; border-color: #10b981; box-shadow: 0 0 6px rgba(16,185,129,0.5); }
-.pip.partial { background: var(--blue); border-color: var(--blue); }
-.pip.empty { background: rgba(255,255,255,0.07); }
-
-.mastery-req {
-  font-size: 10px; color: var(--text-dim); white-space: nowrap;
-  margin-top: 2px; text-align: right;
-}
-
-.path-cta-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 20px; border-radius: 16px;
-  border: 1px solid rgba(59,130,246,0.2);
-  background: rgba(59,130,246,0.06);
-  margin-top: 16px;
-  gap: 16px;
-}
-.path-cta-text { font-size: 13px; color: var(--text-mid); }
-.path-cta-text strong { color: white; }
-
-/* path unit gap */
-.path-unit-gap { height: 0; }
-.path-unit-block { margin-bottom: 4px; }
-
-/* ── QUIZ CARDS ── */
-.cat-pill {
-  padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
-  border: 1px solid var(--border); background: rgba(255,255,255,0.04);
-  cursor: pointer; transition: all 0.2s; white-space: nowrap;
-  font-family: 'DM Sans', sans-serif;
-}
-.cat-pill:hover, .cat-pill.active {
-  background: var(--blue); border-color: var(--blue); color: white;
-}
-
-/* ── TESTIMONIAL ── */
-.test-card {
-  background: rgba(255,255,255,0.025);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 20px; padding: 28px;
-  transition: border-color 0.3s, transform 0.35s cubic-bezier(0.23,1,0.32,1);
-}
-.test-card:hover {
-  border-color: rgba(59,130,246,0.28);
-  transform: translateY(-4px);
-}
+/* ── MARQUEE ── */
+.marquee-track{display:flex;gap:0;width:max-content;animation:marquee 28s linear infinite;}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.marquee-track:hover{animation-play-state:paused;}
 
 /* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px;}
 
 /* ── MODAL ── */
-.modal-bg {
-  position: fixed; inset: 0; z-index: 800;
-  background: rgba(0,0,0,0.7);
-  backdrop-filter: blur(10px);
-  display: none; align-items: center; justify-content: center;
+.modal-bg{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;
 }
-.modal-bg.open { display: flex; }
-.modal-box {
-  width: 100%; max-width: 440px;
-  background: #0c0a1e;
-  border: 1px solid rgba(255,255,255,0.09);
-  border-radius: 28px; padding: 44px;
-  position: relative; margin: 16px;
-  box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+.modal-bg.open{display:flex;}
+
+/* ── GRADIENT TEXT ── */
+.grad-blue{background:linear-gradient(135deg,#60a5fa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.grad-green{background:linear-gradient(135deg,#34d399,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* ── FEATURE ICON ── */
+.feat-icon{
+  width:48px;height:48px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
 }
-.modal-input {
-  width:100%; background:rgba(0,0,0,0.35);
+
+/* ── STAT BAR COUNTER ── */
+@keyframes countUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.stat-num{animation:countUp .8s ease forwards;}
+
+/* ── TESTIMONIAL CARD ── */
+.test-card{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:20px;padding:28px;
+  transition:border-color .3s;
+}
+.test-card:hover{border-color:rgba(59,130,246,0.3);}
+
+/* ── PROGRESS BARS ── */
+.prog-bar{
+  height:4px;background:rgba(255,255,255,0.06);
+  border-radius:4px;overflow:hidden;margin-top:10px;
+}
+.prog-fill{height:100%;border-radius:4px;transition:width 1.5s cubic-bezier(.2,.8,.2,1);}
+
+/* ── CATEGORY PILLS ── */
+.cat-pill{
+  padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;
   border:1px solid rgba(255,255,255,0.1);
-  border-radius:12px; padding:13px 16px;
-  color:white; font-size:14px; outline:none;
-  transition:border-color 0.2s;
-  font-family:'DM Sans',sans-serif;
+  background:rgba(255,255,255,0.04);
+  cursor:pointer;transition:all .2s;white-space:nowrap;
 }
-.modal-input:focus { border-color:var(--blue); background: rgba(59,130,246,0.04); }
-.modal-input::placeholder { color:rgba(255,255,255,0.28); }
-
-/* ── STAT RING ── */
-.stat-num { font-family:'Syne',sans-serif; font-weight:800; letter-spacing:-0.05em; }
-
-/* ── ANIMATE STAGGER ── */
-.path-node { animation: none; }
-.path-node.anim-in {
-  animation: nodeIn 0.4s cubic-bezier(0.16,1,0.3,1) both;
-}
-@keyframes nodeIn {
-  from { opacity:0; transform:translateX(-12px); }
-  to { opacity:1; transform:translateX(0); }
+.cat-pill:hover,.cat-pill.active{
+  background:var(--blue);border-color:var(--blue);color:white;
 }
 
-/* ── RESPONSIVE ── */
-@media (max-width: 900px) {
-  .spec-grid { grid-template-columns: repeat(4,1fr); gap:8px; }
-  .bento-main { grid-template-columns: 1fr !important; }
+/* ── INPUT STYLES ── */
+.modal-input{
+  width:100%;background:rgba(0,0,0,.4);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;padding:14px 18px;
+  color:white;font-size:14px;outline:none;
+  transition:border-color .2s;font-family:'Inter',sans-serif;
 }
-@media (max-width: 640px) {
-  .spec-grid { grid-template-columns: repeat(2,1fr); }
-  .nav-links { display:none !important; }
-  .step-grid { grid-template-columns: 1fr !important; }
-  .test-grid { grid-template-columns: 1fr !important; }
-  .quiz-grid { grid-template-columns: 1fr !important; }
-}
+.modal-input:focus{border-color:var(--blue);}
+.modal-input::placeholder{color:rgba(255,255,255,.3);}
 </style>
 </head>
 <body>
@@ -474,132 +208,132 @@ nav {
 <div id="grid-canvas"></div>
 <div class="grain"></div>
 
-<!-- ══════════════════════════════════════════
-     NAV
-══════════════════════════════════════════ -->
+<!-- ══════════════ NAV ══════════════ -->
 <nav>
-  <div class="nav-inner">
-    <a class="nav-logo" onclick="scrollTo(0,0)" href="#">
-      <div class="nav-logo-icon">M</div>
-      <span class="nav-logo-text">MedSchoolPrep</span>
-    </a>
-    <div class="nav-links" id="navLinks">
-      <a href="#features">Features</a>
-      <a href="#pathway">Specialty Paths</a>
-      <a href="#quizzes">Quiz Library</a>
-      <a href="#methodology">How It Works</a>
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;">
+    <div style="display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="scrollTo(0,0)">
+      <div style="width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:white;transition:transform .3s;" onmouseover="this.style.transform='rotate(8deg)'" onmouseout="this.style.transform='rotate(0)'">M</div>
+      <span style="font-weight:800;font-size:18px;color:white;letter-spacing:-.03em;">MedSchoolPrep</span>
     </div>
-    <div class="nav-actions">
-      <button class="btn-nav-signin" onclick="openAuth('login')">Sign In</button>
-      <button class="btn btn-blue" onclick="openAuth('signup')">Get Started Free</button>
+
+    <div style="display:none;gap:32px;font-size:13px;font-weight:500;color:rgba(255,255,255,.5);" class="nav-links" id="navLinks">
+      <a href="#features" style="color:inherit;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Features</a>
+      <a href="#quizzes" style="color:inherit;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Quiz Library</a>
+      <a href="#methodology" style="color:inherit;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Methodology</a>
+      <a href="#" style="color:inherit;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Pricing</a>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button onclick="openAuth('login')" style="font-size:13px;font-weight:600;color:rgba(255,255,255,.6);background:none;border:none;cursor:pointer;padding:8px 12px;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.6)'">Sign In</button>
+      <button onclick="openAuth('signup')" class="btn-blue" style="font-size:13px;padding:9px 22px;">Get Started Free</button>
     </div>
   </div>
 </nav>
 
-<!-- ══════════════════════════════════════════
-     HERO
-══════════════════════════════════════════ -->
-<section style="position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:130px 24px 80px;overflow:hidden;text-align:center;">
-  <div class="halo halo-hero-top"></div>
-  <div class="halo halo-hero-l"></div>
-  <div class="halo halo-hero-r"></div>
+<!-- ══════════════ HERO ══════════════ -->
+<section style="position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 24px 80px;overflow:hidden;text-align:center;">
+  <div class="ray-hero"></div>
+  <div class="glow-blue" style="width:600px;height:400px;bottom:-100px;left:-100px;"></div>
+  <div class="glow-blue" style="width:400px;height:400px;bottom:-50px;right:-80px;background:radial-gradient(circle,rgba(99,102,241,0.1) 0%,transparent 70%);"></div>
 
   <!-- Badge -->
-  <div class="rev" style="transition-delay:.04s;margin-bottom:30px;">
-    <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px 6px 10px;border-radius:100px;border:1px solid rgba(59,130,246,.3);background:rgba(59,130,246,.09);font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(147,197,253,1);">
-      <span style="position:relative;display:flex;width:8px;height:8px;flex-shrink:0;">
-        <span class="ping" style="position:absolute;inset:0;border-radius:50%;background:rgba(96,165,250,.65);"></span>
+  <div class="reveal" style="transition-delay:.05s;margin-bottom:32px;">
+    <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px 6px 10px;border-radius:100px;border:1px solid rgba(59,130,246,.3);background:rgba(59,130,246,.1);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(147,197,253,1);">
+      <span style="position:relative;display:flex;width:8px;height:8px;">
+        <span class="ping-dot" style="position:absolute;inset:0;border-radius:50%;background:rgba(96,165,250,.7);"></span>
         <span style="position:relative;width:8px;height:8px;border-radius:50%;background:#3b82f6;display:inline-block;"></span>
       </span>
-      MetaBrain AI v4.0 · Now Live
+      Now live — MetaBrain AI v4.0
     </div>
   </div>
 
   <!-- Headline -->
-  <h1 class="rev display" style="font-size:clamp(46px,7.5vw,90px);color:white;max-width:940px;margin-bottom:26px;transition-delay:.1s;">
+  <h1 class="reveal" style="font-size:clamp(44px,7vw,88px);font-weight:900;line-height:.95;letter-spacing:-.04em;max-width:900px;color:white;margin-bottom:28px;transition-delay:.1s;">
     Your entire<br/>medical career,<br/><span class="grad-blue">synchronized.</span>
   </h1>
 
   <!-- Sub -->
-  <p class="rev" style="font-size:clamp(16px,1.8vw,19px);color:var(--text-dim);max-width:540px;line-height:1.65;margin-bottom:48px;transition-delay:.2s;font-weight:400;">
-    The high-performance MCAT workspace for serious premeds. <strong style="color:rgba(255,255,255,0.7);">1,500 adaptive quizzes</strong>, AI coaching, clinical log tracking, and real-time performance analytics — all in one place.
+  <p class="reveal" style="font-size:clamp(16px,2vw,20px);color:rgba(255,255,255,.45);max-width:560px;line-height:1.6;margin-bottom:48px;transition-delay:.2s;font-weight:400;">
+    The high-performance MCAT workspace for serious premeds. Adaptive quizzes, AI coaching, clinical log tracking, and real-time performance analytics — all in one place.
   </p>
 
   <!-- CTAs -->
-  <div class="rev" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:80px;transition-delay:.3s;">
-    <button onclick="openAuth('signup')" class="btn btn-primary" style="font-size:17px;padding:15px 38px;">
+  <div class="reveal" style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:80px;transition-delay:.3s;">
+    <button onclick="openAuth('signup')" class="btn-primary" style="font-size:17px;padding:16px 36px;">
       Start for Free
     </button>
-    <button onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})" class="btn btn-ghost" style="font-size:17px;padding:15px 38px;">
+    <button onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})" class="btn-outline" style="font-size:17px;padding:16px 36px;">
       Explore Features
     </button>
   </div>
 
   <!-- 3D Mockup -->
-  <div class="rev mock-wrap" style="width:100%;max-width:1020px;transition-delay:.44s;" id="mockupWrap">
-    <div class="mock-3d" id="mockup3d">
-      <!-- Chrome bar -->
-      <div style="height:42px;background:rgba(0,0,0,0.7);border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;padding:0 16px;justify-content:space-between;">
-        <div style="display:flex;gap:6px;">
-          <div style="width:11px;height:11px;border-radius:50%;background:#ff5f57;"></div>
-          <div style="width:11px;height:11px;border-radius:50%;background:#febc2e;"></div>
-          <div style="width:11px;height:11px;border-radius:50%;background:#28c840;"></div>
+  <div class="reveal mockup-wrap" style="width:100%;max-width:1000px;transition-delay:.45s;" id="mockupWrap">
+    <div class="mockup-3d" id="mockup3d">
+      <!-- Window chrome -->
+      <div style="height:44px;background:rgba(0,0,0,.6);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;padding:0 16px;justify-content:space-between;">
+        <div style="display:flex;gap:7px;">
+          <div style="width:12px;height:12px;border-radius:50%;background:#ff5f57;"></div>
+          <div style="width:12px;height:12px;border-radius:50%;background:#febc2e;"></div>
+          <div style="width:12px;height:12px;border-radius:50%;background:#28c840;"></div>
         </div>
-        <div style="font-size:10.5px;font-family:monospace;color:rgba(255,255,255,0.25);">medschoolprep.app / dashboard</div>
+        <div style="font-size:11px;font-family:monospace;color:rgba(255,255,255,.3);">medschoolprep.app / dashboard</div>
         <div style="width:40px;"></div>
       </div>
 
       <!-- App body -->
-      <div style="display:flex;height:490px;background:#030014;">
+      <div style="display:flex;height:500px;background:#030014;">
         <!-- Sidebar -->
-        <div style="width:228px;border-right:1px solid rgba(255,255,255,0.04);background:rgba(0,0,0,0.28);padding:20px 14px;flex-shrink:0;">
-          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);margin-bottom:12px;">Navigation</div>
-          <div style="display:flex;flex-direction:column;gap:3px;">
-            <div style="height:34px;border-radius:9px;background:rgba(59,130,246,0.14);border:1px solid rgba(59,130,246,0.22);display:flex;align-items:center;padding:0 11px;font-size:12.5px;font-weight:600;color:#93c5fd;gap:7px;">🧠 AI Coach</div>
-            <div style="height:34px;border-radius:9px;background:rgba(255,255,255,0.03);display:flex;align-items:center;padding:0 11px;font-size:12.5px;color:rgba(255,255,255,0.35);gap:7px;">📚 Quiz Library</div>
-            <div style="height:34px;border-radius:9px;background:rgba(255,255,255,0.03);display:flex;align-items:center;padding:0 11px;font-size:12.5px;color:rgba(255,255,255,0.35);gap:7px;">📊 Analytics</div>
-            <div style="height:34px;border-radius:9px;background:rgba(255,255,255,0.03);display:flex;align-items:center;padding:0 11px;font-size:12.5px;color:rgba(255,255,255,0.35);gap:7px;">📝 AMCAS Vault</div>
-            <div style="height:34px;border-radius:9px;background:rgba(255,255,255,0.03);display:flex;align-items:center;padding:0 11px;font-size:12.5px;color:rgba(255,255,255,0.35);gap:7px;">📅 Study Planner</div>
+        <div style="width:240px;border-right:1px solid rgba(255,255,255,.05);background:rgba(0,0,0,.3);padding:24px 16px;flex-shrink:0;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:14px;">Navigation</div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="height:36px;border-radius:10px;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.25);display:flex;align-items:center;padding:0 12px;font-size:13px;font-weight:600;color:#93c5fd;gap:8px;">🧠 AI Coach</div>
+            <div style="height:36px;border-radius:10px;background:rgba(255,255,255,.04);display:flex;align-items:center;padding:0 12px;font-size:13px;color:rgba(255,255,255,.4);gap:8px;">📚 Quiz Library</div>
+            <div style="height:36px;border-radius:10px;background:rgba(255,255,255,.04);display:flex;align-items:center;padding:0 12px;font-size:13px;color:rgba(255,255,255,.4);gap:8px;">📊 Analytics</div>
+            <div style="height:36px;border-radius:10px;background:rgba(255,255,255,.04);display:flex;align-items:center;padding:0 12px;font-size:13px;color:rgba(255,255,255,.4);gap:8px;">📝 AMCAS Vault</div>
+            <div style="height:36px;border-radius:10px;background:rgba(255,255,255,.04);display:flex;align-items:center;padding:0 12px;font-size:13px;color:rgba(255,255,255,.4);gap:8px;">📅 Study Planner</div>
           </div>
-          <div style="margin-top:20px;border-top:1px solid rgba(255,255,255,0.04);padding-top:18px;">
-            <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.18);margin-bottom:10px;">Weak Areas</div>
-            <div style="font-size:11.5px;color:rgba(255,255,255,0.45);margin-bottom:5px;">Biochemistry</div>
-            <div class="pbar"><div class="pbar-fill" style="width:38%;background:linear-gradient(90deg,#f59e0b,#ef4444);"></div></div>
-            <div style="font-size:11.5px;color:rgba(255,255,255,0.45);margin-bottom:5px;margin-top:9px;">CARS</div>
-            <div class="pbar"><div class="pbar-fill" style="width:55%;background:linear-gradient(90deg,#3b82f6,#6366f1);"></div></div>
-            <div style="font-size:11.5px;color:rgba(255,255,255,0.45);margin-bottom:5px;margin-top:9px;">Physics</div>
-            <div class="pbar"><div class="pbar-fill" style="width:71%;background:linear-gradient(90deg,#10b981,#06b6d4);"></div></div>
+          <div style="margin-top:24px;border-top:1px solid rgba(255,255,255,.05);padding-top:20px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:12px;">Weak Areas</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;">Biochemistry</div>
+            <div class="prog-bar"><div class="prog-fill" style="width:38%;background:linear-gradient(90deg,#f59e0b,#ef4444);"></div></div>
+            <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;margin-top:10px;">CARS</div>
+            <div class="prog-bar"><div class="prog-fill" style="width:55%;background:linear-gradient(90deg,#3b82f6,#6366f1);"></div></div>
+            <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;margin-top:10px;">Physics</div>
+            <div class="prog-bar"><div class="prog-fill" style="width:71%;background:linear-gradient(90deg,#10b981,#06b6d4);"></div></div>
           </div>
         </div>
 
-        <!-- Main panel -->
-        <div style="flex:1;padding:28px 32px;overflow:hidden;">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;">
+        <!-- Main -->
+        <div style="flex:1;padding:32px;overflow:hidden;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;">
             <div>
-              <div style="font-family:'Syne',sans-serif;font-size:21px;font-weight:700;margin-bottom:4px;letter-spacing:-0.04em;">Mastery Engine</div>
-              <div style="font-size:12px;color:rgba(255,255,255,0.3);">System Performance · Optimal</div>
+              <div style="font-size:22px;font-weight:800;margin-bottom:4px;">Mastery Engine</div>
+              <div style="font-size:13px;color:rgba(255,255,255,.35);">System Performance · Optimal</div>
             </div>
-            <div style="text-align:center;">
-              <div style="font-family:'Syne',sans-serif;font-size:30px;font-weight:800;color:#3b82f6;letter-spacing:-0.04em;">84%</div>
-              <div style="font-size:9px;color:rgba(255,255,255,0.28);letter-spacing:.1em;text-transform:uppercase;">Overall</div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="text-align:center;">
+                <div style="font-size:28px;font-weight:900;color:#3b82f6;">84%</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.08em;text-transform:uppercase;">Overall</div>
+              </div>
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div style="padding:16px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
-              <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#60a5fa;margin-bottom:7px;">Biology</div>
-              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:10px;">Cellular Respiration</div>
-              <div class="pbar"><div class="pbar-fill" style="width:72%;background:#3b82f6;"></div></div>
-              <div style="font-size:10.5px;color:rgba(255,255,255,0.28);margin-top:5px;">72% mastery</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div style="padding:18px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);">
+              <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#60a5fa;margin-bottom:8px;">Biology</div>
+              <div style="font-size:14px;font-weight:700;color:white;margin-bottom:12px;">Cellular Respiration</div>
+              <div class="prog-bar"><div class="prog-fill" style="width:72%;background:#3b82f6;"></div></div>
+              <div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:6px;">72% mastery</div>
             </div>
-            <div style="padding:16px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
-              <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#34d399;margin-bottom:7px;">Chemistry</div>
-              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:10px;">Acid-Base Equilibria</div>
-              <div class="pbar"><div class="pbar-fill" style="width:48%;background:#10b981;"></div></div>
-              <div style="font-size:10.5px;color:rgba(255,255,255,0.28);margin-top:5px;">48% mastery</div>
+            <div style="padding:18px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);">
+              <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#34d399;margin-bottom:8px;">Chemistry</div>
+              <div style="font-size:14px;font-weight:700;color:white;margin-bottom:12px;">Acid-Base Equilibria</div>
+              <div class="prog-bar"><div class="prog-fill" style="width:48%;background:#10b981;"></div></div>
+              <div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:6px;">48% mastery</div>
             </div>
-            <div style="padding:16px;border-radius:14px;background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.18);grid-column:span 2;">
-              <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#93c5fd;margin-bottom:7px;">AI Coach · Active</div>
-              <div style="font-size:12.5px;color:rgba(255,255,255,0.48);line-height:1.5;">You improved Biochemistry by <span style="color:#60a5fa;font-weight:700;">+12 points</span> this week. Focus on lipid metabolism — it appears in 3 upcoming MCAT topics.</div>
+            <div style="padding:18px;border-radius:16px;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);grid-column:span 2;">
+              <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#93c5fd;margin-bottom:8px;">AI Coach · Active</div>
+              <div style="font-size:13px;color:rgba(255,255,255,.5);">You improved your Biochemistry score by <span style="color:#60a5fa;font-weight:700;">+12 points</span> this week. Focus on lipid metabolism next — it appears in 3 upcoming MCAT topics.</div>
             </div>
           </div>
         </div>
@@ -608,144 +342,143 @@ nav {
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     STATS
-══════════════════════════════════════════ -->
-<section style="padding:0 24px 88px;">
-  <div style="max-width:1020px;margin:0 auto;">
-    <div class="rev" style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.014);">
-      <div style="padding:38px 40px;text-align:center;position:relative;">
-        <div class="stat-num grad-blue" style="font-size:clamp(36px,4.5vw,54px);">22,500+</div>
-        <div style="font-size:12.5px;color:var(--text-dim);margin-top:7px;font-weight:500;">MCAT Questions</div>
+<!-- ══════════════ STATS ══════════════ -->
+<section style="padding:0 24px 80px;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div class="reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.06);">
+      <div style="padding:36px 40px;background:rgba(255,255,255,.02);text-align:center;">
+        <div style="font-size:clamp(36px,5vw,56px);font-weight:900;letter-spacing:-.04em;" class="grad-blue" id="cnt1">22,500+</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:6px;font-weight:500;">MCAT Questions</div>
       </div>
-      <div style="padding:38px 40px;text-align:center;border-left:1px solid rgba(255,255,255,0.06);border-right:1px solid rgba(255,255,255,0.06);">
-        <div class="stat-num grad-green" style="font-size:clamp(36px,4.5vw,54px);">20k+</div>
-        <div style="font-size:12.5px;color:var(--text-dim);margin-top:7px;font-weight:500;">Active Students</div>
+      <div style="padding:36px 40px;background:rgba(255,255,255,.02);text-align:center;border-left:1px solid rgba(255,255,255,.06);border-right:1px solid rgba(255,255,255,.06);">
+        <div style="font-size:clamp(36px,5vw,56px);font-weight:900;letter-spacing:-.04em;" class="grad-green" id="cnt2">20k+</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:6px;font-weight:500;">Active Students</div>
       </div>
-      <div style="padding:38px 40px;text-align:center;">
-        <div class="stat-num" style="font-size:clamp(36px,4.5vw,54px);background:linear-gradient(135deg,#a78bfa,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-0.05em;">4.9 ★</div>
-        <div style="font-size:12.5px;color:var(--text-dim);margin-top:7px;font-weight:500;">Average Rating</div>
+      <div style="padding:36px 40px;background:rgba(255,255,255,.02);text-align:center;">
+        <div style="font-size:clamp(36px,5vw,56px);font-weight:900;letter-spacing:-.04em;background:linear-gradient(135deg,#a78bfa,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;" id="cnt3">4.9 ★</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:6px;font-weight:500;">Average Rating</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     MARQUEE
-══════════════════════════════════════════ -->
+<!-- ══════════════ MARQUEE ══════════════ -->
 <section style="padding:0 0 100px;overflow:hidden;position:relative;">
-  <div style="position:absolute;left:0;top:0;bottom:0;width:140px;background:linear-gradient(to right,#030014,transparent);z-index:2;pointer-events:none;"></div>
-  <div style="position:absolute;right:0;top:0;bottom:0;width:140px;background:linear-gradient(to left,#030014,transparent);z-index:2;pointer-events:none;"></div>
+  <div style="position:absolute;left:0;top:0;bottom:0;width:120px;background:linear-gradient(to right,#030014,transparent);z-index:2;pointer-events:none;"></div>
+  <div style="position:absolute;right:0;top:0;bottom:0;width:120px;background:linear-gradient(to left,#030014,transparent);z-index:2;pointer-events:none;"></div>
   <div class="marquee-track">
-    <div style="display:flex;gap:14px;padding:0 7px;" id="marq1"></div>
-    <div style="display:flex;gap:14px;padding:0 7px;" id="marq2"></div>
+    <div style="display:flex;gap:16px;padding:0 8px;" id="marq1"></div>
+    <div style="display:flex;gap:16px;padding:0 8px;" id="marq2"></div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     FEATURES BENTO
-══════════════════════════════════════════ -->
+<!-- ══════════════ FEATURES BENTO ══════════════ -->
 <section id="features" style="padding:0 24px 120px;">
-  <div style="max-width:1320px;margin:0 auto;">
-    <div class="rev" style="text-align:center;margin-bottom:80px;">
-      <div class="section-label">Platform Features</div>
-      <h2 class="display" style="font-size:clamp(38px,5vw,68px);color:white;margin-bottom:18px;">Built for the<br/><span class="grad-blue">modern premed.</span></h2>
-      <p style="font-size:17px;color:var(--text-dim);max-width:480px;margin:0 auto;line-height:1.6;">Every tool you need to get into your dream medical school — including <strong style="color:rgba(255,255,255,0.65);">1,500 adaptive quizzes</strong> — in one synchronized workspace.</p>
+  <div style="max-width:1280px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;margin-bottom:80px;">
+      <div style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:100px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:22px;">Platform Features</div>
+      <h2 style="font-size:clamp(38px,5vw,68px);font-weight:900;letter-spacing:-.04em;line-height:.95;margin-bottom:20px;">Built for the<br/><span class="grad-blue">modern premed.</span></h2>
+      <p style="font-size:18px;color:rgba(255,255,255,.4);max-width:500px;margin:0 auto;font-weight:400;line-height:1.5;">Every tool you need to get into your dream medical school, in one synchronized workspace.</p>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:14px;" class="bento-main">
+    <!-- Bento Grid -->
+    <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:16px;">
 
-      <!-- Card 1 — Mastery Engine LARGE -->
-      <div class="card rev" style="grid-column:span 8;padding:48px;min-height:400px;position:relative;overflow:hidden;transition-delay:.05s;">
-        <div style="position:absolute;top:-80px;right:-80px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.09) 0%,transparent 65%);pointer-events:none;"></div>
-        <div style="max-width:400px;position:relative;z-index:1;">
-          <div class="feat-icon" style="background:rgba(59,130,246,0.1);color:#3b82f6;">🧠</div>
-          <h3 class="display-sm" style="font-size:26px;color:white;margin-bottom:13px;">Mastery Engine</h3>
-          <p style="color:var(--text-dim);line-height:1.68;margin-bottom:28px;font-size:14.5px;">Adaptive algorithms continuously detect knowledge gaps and reshape your curriculum in real time. No two sessions are ever the same.</p>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <span style="padding:4px 11px;border-radius:20px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);font-size:11px;color:#93c5fd;font-weight:600;">Adaptive Learning</span>
-            <span style="padding:4px 11px;border-radius:20px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);font-size:11px;color:#93c5fd;font-weight:600;">Spaced Repetition</span>
-            <span style="padding:4px 11px;border-radius:20px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);font-size:11px;color:#93c5fd;font-weight:600;">Gap Analysis</span>
+      <!-- Card 1 — Mastery Engine (LARGE) -->
+      <div class="card reveal" style="grid-column:span 8;padding:48px;min-height:400px;position:relative;overflow:hidden;transition-delay:.05s;">
+        <div style="position:absolute;top:-60px;right:-60px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.1) 0%,transparent 70%);pointer-events:none;"></div>
+        <div style="max-width:420px;position:relative;z-index:1;">
+          <div class="feat-icon" style="background:rgba(59,130,246,.12);color:#3b82f6;margin-bottom:24px;">🧠</div>
+          <h3 style="font-size:28px;font-weight:900;margin-bottom:14px;letter-spacing:-.03em;">Mastery Engine</h3>
+          <p style="color:rgba(255,255,255,.45);line-height:1.65;margin-bottom:28px;font-size:15px;">Adaptive algorithms continuously detect knowledge gaps and reshape your curriculum in real time. No two sessions are ever the same.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <span style="padding:5px 12px;border-radius:20px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.2);font-size:12px;color:#93c5fd;font-weight:600;">Adaptive Learning</span>
+            <span style="padding:5px 12px;border-radius:20px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.2);font-size:12px;color:#93c5fd;font-weight:600;">Spaced Repetition</span>
+            <span style="padding:5px 12px;border-radius:20px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.2);font-size:12px;color:#93c5fd;font-weight:600;">Gap Analysis</span>
           </div>
         </div>
-        <div style="position:absolute;right:32px;bottom:32px;width:210px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:16px;transform:rotate(-3deg);transition:transform 0.4s;" onmouseover="this.style.transform='rotate(0)'" onmouseout="this.style.transform='rotate(-3deg)'">
-          <div style="font-size:9.5px;color:rgba(255,255,255,0.28);margin-bottom:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Performance Today</div>
-          <div style="display:flex;flex-direction:column;gap:7px;">
+        <!-- mini mockup -->
+        <div style="position:absolute;right:32px;bottom:32px;width:220px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px;transform:rotate(-3deg);transition:transform .5s;" onmouseover="this.style.transform='rotate(0deg)'" onmouseout="this.style.transform='rotate(-3deg)'">
+          <div style="font-size:11px;color:rgba(255,255,255,.3);margin-bottom:12px;font-weight:600;">PERFORMANCE TODAY</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
             <div>
-              <div style="display:flex;justify-content:space-between;font-size:10.5px;margin-bottom:3px;"><span style="color:rgba(255,255,255,0.55);">Glycolysis</span><span style="color:#34d399;font-weight:700;">+18%</span></div>
-              <div class="pbar"><div class="pbar-fill" style="width:82%;background:linear-gradient(90deg,#3b82f6,#6366f1);"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;"><span style="color:rgba(255,255,255,.6);">Glycolysis</span><span style="color:#34d399;font-weight:700;">+18%</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:82%;background:linear-gradient(90deg,#3b82f6,#6366f1);"></div></div>
             </div>
             <div>
-              <div style="display:flex;justify-content:space-between;font-size:10.5px;margin-bottom:3px;"><span style="color:rgba(255,255,255,0.55);">Acid-Base</span><span style="color:#f59e0b;font-weight:700;">+7%</span></div>
-              <div class="pbar"><div class="pbar-fill" style="width:56%;background:linear-gradient(90deg,#f59e0b,#ef4444);"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;"><span style="color:rgba(255,255,255,.6);">Acid-Base</span><span style="color:#f59e0b;font-weight:700;">+7%</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:56%;background:linear-gradient(90deg,#f59e0b,#ef4444);"></div></div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Card 2 — AI Coach SMALL -->
-      <div class="card rev" style="grid-column:span 4;padding:34px;display:flex;flex-direction:column;justify-content:space-between;transition-delay:.1s;">
+      <!-- Card 2 — AI Coach (SMALL) -->
+      <div class="card reveal" style="grid-column:span 4;padding:36px;display:flex;flex-direction:column;justify-content:space-between;transition-delay:.1s;">
         <div>
-          <div class="feat-icon" style="background:rgba(16,185,129,0.1);color:#10b981;">💬</div>
-          <h3 class="display-sm" style="font-size:21px;color:white;margin-bottom:9px;">AI Coach</h3>
-          <p style="color:var(--text-dim);font-size:13px;line-height:1.63;">Ask anything — O-Chem mechanisms, AMCAS essays, MMI prep. Available 24/7.</p>
+          <div class="feat-icon" style="background:rgba(16,185,129,.1);color:#10b981;margin-bottom:20px;">💬</div>
+          <h3 style="font-size:22px;font-weight:900;margin-bottom:10px;letter-spacing:-.03em;">AI Coach</h3>
+          <p style="color:rgba(255,255,255,.4);font-size:13px;line-height:1.6;">Ask anything — O-Chem mechanisms, AMCAS essays, MMI prep. Available 24/7.</p>
         </div>
-        <div style="margin-top:22px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.06);border-radius:13px;padding:15px;">
-          <div style="font-size:9.5px;color:rgba(16,185,129,0.7);font-weight:700;margin-bottom:9px;letter-spacing:.06em;text-transform:uppercase;">Active Chat</div>
-          <div style="background:rgba(59,130,246,0.14);border-radius:9px;padding:9px;font-size:11.5px;color:#93c5fd;margin-bottom:7px;">"Explain the Cori cycle..."</div>
-          <div style="font-size:11.5px;color:rgba(255,255,255,0.38);line-height:1.5;font-style:italic;">The Cori cycle converts lactate from anaerobic glycolysis into glucose via hepatic gluconeogenesis...</div>
+        <div style="margin-top:24px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:16px;">
+          <div style="font-size:11px;color:rgba(16,185,129,.7);font-weight:700;margin-bottom:10px;letter-spacing:.05em;">ACTIVE CHAT</div>
+          <div style="background:rgba(59,130,246,.15);border-radius:10px;padding:10px;font-size:12px;color:#93c5fd;margin-bottom:8px;">"Explain the Cori cycle..."</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.4);line-height:1.5;font-style:italic;">The Cori cycle converts lactate from anaerobic glycolysis into glucose via hepatic gluconeogenesis...</div>
         </div>
       </div>
 
       <!-- Card 3 — Quiz Library -->
-      <div class="card rev" style="grid-column:span 4;padding:34px;transition-delay:.15s;">
-        <div class="feat-icon" style="background:rgba(139,92,246,0.1);color:#a78bfa;">📚</div>
-        <h3 class="display-sm" style="font-size:21px;color:white;margin-bottom:9px;">Quiz Library</h3>
-        <p style="color:var(--text-dim);font-size:13px;line-height:1.63;margin-bottom:18px;"><strong style="color:rgba(255,255,255,0.65);">1,500 timed MCAT-style quizzes</strong> with enforced answer variation and detailed explanations.</p>
+      <div class="card reveal" style="grid-column:span 4;padding:36px;transition-delay:.15s;">
+        <div class="feat-icon" style="background:rgba(139,92,246,.1);color:#a78bfa;margin-bottom:20px;">📚</div>
+        <h3 style="font-size:22px;font-weight:900;margin-bottom:10px;letter-spacing:-.03em;">Quiz Library</h3>
+        <p style="color:rgba(255,255,255,.4);font-size:13px;line-height:1.6;margin-bottom:20px;">1,500+ timed MCAT-style quizzes with enforced answer variation and detailed explanations.</p>
         <div style="display:flex;flex-wrap:wrap;gap:6px;">
-          <span style="padding:4px 10px;border-radius:20px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);font-size:11px;color:#c4b5fd;font-weight:600;">Bio/Biochem</span>
-          <span style="padding:4px 10px;border-radius:20px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);font-size:11px;color:#c4b5fd;font-weight:600;">Chem/Phys</span>
-          <span style="padding:4px 10px;border-radius:20px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);font-size:11px;color:#c4b5fd;font-weight:600;">Psych/Soc</span>
-          <span style="padding:4px 10px;border-radius:20px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);font-size:11px;color:#c4b5fd;font-weight:600;">CARS</span>
+          <span style="padding:4px 10px;border-radius:20px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);font-size:11px;color:#c4b5fd;font-weight:600;">Bio/Biochem</span>
+          <span style="padding:4px 10px;border-radius:20px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);font-size:11px;color:#c4b5fd;font-weight:600;">Chem/Phys</span>
+          <span style="padding:4px 10px;border-radius:20px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);font-size:11px;color:#c4b5fd;font-weight:600;">Psych/Soc</span>
+          <span style="padding:4px 10px;border-radius:20px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);font-size:11px;color:#c4b5fd;font-weight:600;">CARS</span>
         </div>
       </div>
 
       <!-- Card 4 — AMCAS Vault -->
-      <div class="card rev" style="grid-column:span 4;padding:34px;transition-delay:.2s;">
-        <div class="feat-icon" style="background:rgba(249,115,22,0.1);color:#fb923c;">📋</div>
-        <h3 class="display-sm" style="font-size:21px;color:white;margin-bottom:9px;">AMCAS Vault</h3>
-        <p style="color:var(--text-dim);font-size:13px;line-height:1.63;margin-bottom:18px;">Log clinical hours, shadowing, research, and activities. Export AMCAS-ready with one click.</p>
-        <div style="border:1px dashed rgba(255,255,255,0.09);border-radius:11px;padding:14px;text-align:center;font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.2);letter-spacing:.09em;text-transform:uppercase;">Drop CSV to Import ↑</div>
-      </div>
-
-      <!-- Card 5 — Smart Planner -->
-      <div class="card rev" style="grid-column:span 4;padding:34px;transition-delay:.25s;">
-        <div class="feat-icon" style="background:rgba(6,182,212,0.1);color:#22d3ee;">📅</div>
-        <h3 class="display-sm" style="font-size:21px;color:white;margin-bottom:9px;">Smart Planner</h3>
-        <p style="color:var(--text-dim);font-size:13px;line-height:1.63;margin-bottom:18px;">Auto-scheduled Pomodoro blocks synced to your MCAT date. Adjusts dynamically as you progress.</p>
-        <div style="display:flex;gap:5px;">
-          <div style="flex:1;background:rgba(59,130,246,0.14);border-radius:9px;padding:9px;text-align:center;font-size:10.5px;font-weight:700;color:#93c5fd;">Biochem<br/><span style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:-0.03em;">45m</span></div>
-          <div style="flex:1;background:rgba(16,185,129,0.1);border-radius:9px;padding:9px;text-align:center;font-size:10.5px;font-weight:700;color:#6ee7b7;">CARS<br/><span style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:-0.03em;">30m</span></div>
-          <div style="flex:1;background:rgba(139,92,246,0.1);border-radius:9px;padding:9px;text-align:center;font-size:10.5px;font-weight:700;color:#c4b5fd;">Break<br/><span style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:-0.03em;">10m</span></div>
+      <div class="card reveal" style="grid-column:span 4;padding:36px;transition-delay:.2s;">
+        <div class="feat-icon" style="background:rgba(249,115,22,.1);color:#fb923c;margin-bottom:20px;">📋</div>
+        <h3 style="font-size:22px;font-weight:900;margin-bottom:10px;letter-spacing:-.03em;">AMCAS Vault</h3>
+        <p style="color:rgba(255,255,255,.4);font-size:13px;line-height:1.6;margin-bottom:20px;">Log clinical hours, shadowing, research, and activities. Export AMCAS-ready with one click.</p>
+        <div style="border:1px dashed rgba(255,255,255,.1);border-radius:12px;padding:16px;text-align:center;font-size:11px;font-weight:700;color:rgba(255,255,255,.2);letter-spacing:.08em;text-transform:uppercase;">
+          Drop CSV to Import ↑
         </div>
       </div>
 
-      <!-- Card 6 — Analytics LARGE -->
-      <div class="card rev" style="grid-column:span 8;padding:48px;min-height:280px;position:relative;overflow:hidden;transition-delay:.3s;">
-        <div style="position:absolute;bottom:-50px;right:-50px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,0.07) 0%,transparent 70%);pointer-events:none;"></div>
-        <div style="max-width:380px;position:relative;z-index:1;">
-          <div class="feat-icon" style="background:rgba(16,185,129,0.1);color:#10b981;">📊</div>
-          <h3 class="display-sm" style="font-size:26px;color:white;margin-bottom:13px;">Performance Analytics</h3>
-          <p style="color:var(--text-dim);line-height:1.68;font-size:14.5px;">Granular insights into every topic, section, and question type. Know exactly where every study hour should go.</p>
+      <!-- Card 5 — Study Planner -->
+      <div class="card reveal" style="grid-column:span 4;padding:36px;transition-delay:.25s;">
+        <div class="feat-icon" style="background:rgba(6,182,212,.1);color:#22d3ee;margin-bottom:20px;">📅</div>
+        <h3 style="font-size:22px;font-weight:900;margin-bottom:10px;letter-spacing:-.03em;">Smart Planner</h3>
+        <p style="color:rgba(255,255,255,.4);font-size:13px;line-height:1.6;margin-bottom:20px;">Auto-scheduled Pomodoro blocks synced to your MCAT date. Adjusts dynamically as you progress.</p>
+        <div style="display:flex;gap:6px;">
+          <div style="flex:1;background:rgba(59,130,246,.15);border-radius:10px;padding:10px;text-align:center;font-size:11px;font-weight:700;color:#93c5fd;">Biochem<br/><span style="font-size:16px;font-weight:900;">45m</span></div>
+          <div style="flex:1;background:rgba(16,185,129,.1);border-radius:10px;padding:10px;text-align:center;font-size:11px;font-weight:700;color:#6ee7b7;">CARS<br/><span style="font-size:16px;font-weight:900;">30m</span></div>
+          <div style="flex:1;background:rgba(139,92,246,.1);border-radius:10px;padding:10px;text-align:center;font-size:11px;font-weight:700;color:#c4b5fd;">Break<br/><span style="font-size:16px;font-weight:900;">10m</span></div>
         </div>
-        <div style="position:absolute;right:44px;bottom:44px;display:flex;align-items:flex-end;gap:7px;height:100px;">
-          <div style="width:15px;border-radius:3px 3px 0 0;background:rgba(59,130,246,0.35);height:40%;cursor:pointer;transition:all .25s;" onmouseover="this.style.background='rgba(59,130,246,0.8)'" onmouseout="this.style.background='rgba(59,130,246,0.35)'"></div>
-          <div style="width:15px;border-radius:3px 3px 0 0;background:rgba(59,130,246,0.35);height:60%;cursor:pointer;transition:all .25s;" onmouseover="this.style.background='rgba(59,130,246,0.8)'" onmouseout="this.style.background='rgba(59,130,246,0.35)'"></div>
-          <div style="width:15px;border-radius:3px 3px 0 0;background:rgba(59,130,246,0.35);height:46%;cursor:pointer;transition:all .25s;" onmouseover="this.style.background='rgba(59,130,246,0.8)'" onmouseout="this.style.background='rgba(59,130,246,0.35)'"></div>
-          <div style="width:15px;border-radius:3px 3px 0 0;background:rgba(59,130,246,0.5);height:74%;cursor:pointer;transition:all .25s;" onmouseover="this.style.background='rgba(59,130,246,0.9)'" onmouseout="this.style.background='rgba(59,130,246,0.5)'"></div>
-          <div style="width:15px;border-radius:3px 3px 0 0;background:rgba(59,130,246,0.5);height:84%;cursor:pointer;transition:all .25s;" onmouseover="this.style.background='rgba(59,130,246,0.9)'" onmouseout="this.style.background='rgba(59,130,246,0.5)'"></div>
-          <div style="width:15px;border-radius:3px 3px 0 0;background:rgba(16,185,129,0.7);height:100%;cursor:pointer;box-shadow:0 0 18px rgba(16,185,129,0.4);transition:all .25s;" onmouseover="this.style.background='rgba(16,185,129,1)'" onmouseout="this.style.background='rgba(16,185,129,0.7)'"></div>
-          <div style="width:15px;border-radius:3px 3px 0 0;background:rgba(16,185,129,0.55);height:91%;cursor:pointer;transition:all .25s;" onmouseover="this.style.background='rgba(16,185,129,0.85)'" onmouseout="this.style.background='rgba(16,185,129,0.55)'"></div>
+      </div>
+
+      <!-- Card 6 — Analytics (LARGE) -->
+      <div class="card reveal" style="grid-column:span 8;padding:48px;min-height:320px;position:relative;overflow:hidden;transition-delay:.3s;">
+        <div style="position:absolute;bottom:-40px;right:-40px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,.08) 0%,transparent 70%);pointer-events:none;"></div>
+        <div style="max-width:420px;position:relative;z-index:1;">
+          <div class="feat-icon" style="background:rgba(16,185,129,.1);color:#10b981;margin-bottom:24px;">📊</div>
+          <h3 style="font-size:28px;font-weight:900;margin-bottom:14px;letter-spacing:-.03em;">Performance Analytics</h3>
+          <p style="color:rgba(255,255,255,.45);line-height:1.65;font-size:15px;">Granular insights into every topic, section, and question type. Know exactly where every hour of study should go.</p>
+        </div>
+        <!-- Chart bars -->
+        <div style="position:absolute;right:40px;bottom:40px;display:flex;align-items:flex-end;gap:8px;height:120px;">
+          <div style="width:18px;border-radius:4px 4px 0 0;background:rgba(59,130,246,.4);height:40%;transition:height .3s;" onmouseover="this.style.background='rgba(59,130,246,.8)'" onmouseout="this.style.background='rgba(59,130,246,.4)'"></div>
+          <div style="width:18px;border-radius:4px 4px 0 0;background:rgba(59,130,246,.4);height:60%;" onmouseover="this.style.background='rgba(59,130,246,.8)'" onmouseout="this.style.background='rgba(59,130,246,.4)'"></div>
+          <div style="width:18px;border-radius:4px 4px 0 0;background:rgba(59,130,246,.4);height:48%;" onmouseover="this.style.background='rgba(59,130,246,.8)'" onmouseout="this.style.background='rgba(59,130,246,.4)'"></div>
+          <div style="width:18px;border-radius:4px 4px 0 0;background:rgba(59,130,246,.6);height:75%;" onmouseover="this.style.background='rgba(59,130,246,.9)'" onmouseout="this.style.background='rgba(59,130,246,.6)'"></div>
+          <div style="width:18px;border-radius:4px 4px 0 0;background:rgba(59,130,246,.6);height:85%;" onmouseover="this.style.background='rgba(59,130,246,.9)'" onmouseout="this.style.background='rgba(59,130,246,.6)'"></div>
+          <div style="width:18px;border-radius:4px 4px 0 0;background:rgba(16,185,129,.7);height:100%;box-shadow:0 0 20px rgba(16,185,129,.4);" onmouseover="this.style.background='rgba(16,185,129,1)'" onmouseout="this.style.background='rgba(16,185,129,.7)'"></div>
+          <div style="width:18px;border-radius:4px 4px 0 0;background:rgba(16,185,129,.6);height:92%;"></div>
         </div>
       </div>
 
@@ -753,336 +486,269 @@ nav {
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     SPECIALTY PATH DIAGNOSTIC  (NEW)
-══════════════════════════════════════════ -->
-<section id="pathway" style="padding:0 24px 128px;">
-  <div style="max-width:1160px;margin:0 auto;">
-
-    <!-- Header -->
-    <div class="rev" style="text-align:center;margin-bottom:64px;">
-      <div class="section-label">Medical Specialty Diagnostic</div>
-      <h2 class="display" style="font-size:clamp(36px,4.8vw,66px);color:white;margin-bottom:18px;">What is your<br/><span class="grad-green">target specialty?</span></h2>
-      <p style="font-size:16.5px;color:var(--text-dim);max-width:500px;margin:0 auto;line-height:1.65;">Select your specialty below. MedSchoolPrep will build a personalized learning path — with mastery checkpoints at every stage — from your current baseline to match-day readiness.</p>
-    </div>
-
-    <!-- Specialty Selector Grid -->
-    <div class="rev spec-grid" id="specGrid" style="max-width:800px;margin:0 auto 40px;transition-delay:.05s;"></div>
-
-    <!-- Path Tree Container -->
-    <div class="rev" style="max-width:800px;margin:0 auto;transition-delay:.1s;">
-      <div style="position:relative;">
-        <!-- Path tree rendered here -->
-        <div id="pathTreeWrap" style="background:rgba(8,6,24,0.6);border:1px solid var(--border);border-radius:24px;padding:28px;min-height:380px;transition:all 0.3s;">
-          <!-- Default placeholder -->
-          <div id="pathPlaceholder" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:320px;text-align:center;gap:16px;">
-            <div style="width:64px;height:64px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:28px;">🎯</div>
-            <p style="color:var(--text-dim);font-size:15px;max-width:320px;line-height:1.6;">Select a specialty above to preview your personalized learning path — built on <strong style="color:rgba(255,255,255,0.6);">1,500 adaptive quizzes</strong>.</p>
-          </div>
-          <div id="pathTree" style="display:none;"></div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════
-     HOW IT WORKS
-══════════════════════════════════════════ -->
+<!-- ══════════════ HOW IT WORKS ══════════════ -->
 <section id="methodology" style="padding:0 24px 120px;">
   <div style="max-width:1100px;margin:0 auto;">
-    <div class="rev" style="text-align:center;margin-bottom:72px;">
-      <div class="section-label">Methodology</div>
-      <h2 class="display" style="font-size:clamp(36px,4.8vw,64px);color:white;margin-bottom:16px;">From signup to <span class="grad-green">acceptance.</span></h2>
-      <p style="font-size:16px;color:var(--text-dim);max-width:460px;margin:0 auto;line-height:1.6;">A three-phase system that meets you where you are and gets you where you need to be.</p>
+    <div class="reveal" style="text-align:center;margin-bottom:80px;">
+      <div style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:100px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:22px;">How It Works</div>
+      <h2 style="font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-.04em;line-height:.95;margin-bottom:18px;">From signup to <span class="grad-green">acceptance.</span></h2>
+      <p style="font-size:17px;color:rgba(255,255,255,.4);max-width:480px;margin:0 auto;line-height:1.5;">A three-phase system that meets you where you are and gets you where you need to be.</p>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;" class="step-grid">
-      <div class="card rev" style="padding:38px;text-align:center;transition-delay:.05s;">
-        <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(99,102,241,0.2));border:1px solid rgba(59,130,246,0.28);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:rgba(147,197,253,0.9);margin:0 auto 22px;">01</div>
-        <h3 class="display-sm" style="font-size:19px;color:white;margin-bottom:11px;">Profile Setup</h3>
-        <p style="color:var(--text-dim);font-size:13.5px;line-height:1.65;">Tell us your MCAT date, target score, and current baseline. MetaBrain calibrates your personalized curriculum instantly.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <div class="card reveal" style="padding:40px;text-align:center;transition-delay:.05s;">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(59,130,246,.2),rgba(99,102,241,.2));border:1px solid rgba(59,130,246,.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 24px;">01</div>
+        <h3 style="font-size:20px;font-weight:800;margin-bottom:12px;">Profile Setup</h3>
+        <p style="color:rgba(255,255,255,.4);font-size:14px;line-height:1.6;">Tell us your MCAT date, target score, and current baseline. MetaBrain calibrates your personalized curriculum instantly.</p>
       </div>
-      <div class="card rev" style="padding:38px;text-align:center;border-color:rgba(59,130,246,0.18);transition-delay:.15s;">
-        <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,rgba(16,185,129,0.18),rgba(6,182,212,0.18));border:1px solid rgba(16,185,129,0.3);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:rgba(110,231,183,0.9);margin:0 auto 22px;">02</div>
-        <h3 class="display-sm" style="font-size:19px;color:white;margin-bottom:11px;">Adaptive Sessions</h3>
-        <p style="color:var(--text-dim);font-size:13.5px;line-height:1.65;">Daily AI-curated study sessions from 1,500 adaptive quizzes. The engine identifies weak spots and restructures your plan after every session.</p>
+      <div class="card reveal" style="padding:40px;text-align:center;border-color:rgba(59,130,246,.2);transition-delay:.15s;">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(16,185,129,.2),rgba(6,182,212,.2));border:1px solid rgba(16,185,129,.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 24px;">02</div>
+        <h3 style="font-size:20px;font-weight:800;margin-bottom:12px;">Adaptive Sessions</h3>
+        <p style="color:rgba(255,255,255,.4);font-size:14px;line-height:1.6;">Daily AI-curated study sessions. The engine identifies weak spots after every session and restructures your plan.</p>
       </div>
-      <div class="card rev" style="padding:38px;text-align:center;transition-delay:.25s;">
-        <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,rgba(139,92,246,0.18),rgba(236,72,153,0.18));border:1px solid rgba(139,92,246,0.3);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:rgba(196,181,253,0.9);margin:0 auto 22px;">03</div>
-        <h3 class="display-sm" style="font-size:19px;color:white;margin-bottom:11px;">Score. Apply. Succeed.</h3>
-        <p style="color:var(--text-dim);font-size:13.5px;line-height:1.65;">Track your score trajectory, complete your AMCAS log, and walk into interviews with AI-rehearsed confidence.</p>
+      <div class="card reveal" style="padding:40px;text-align:center;transition-delay:.25s;">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(139,92,246,.2),rgba(236,72,153,.2));border:1px solid rgba(139,92,246,.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 24px;">03</div>
+        <h3 style="font-size:20px;font-weight:800;margin-bottom:12px;">Score. Apply. Succeed.</h3>
+        <p style="color:rgba(255,255,255,.4);font-size:14px;line-height:1.6;">Track your score trajectory, complete your AMCAS application log, and walk into interviews with AI-rehearsed confidence.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     QUIZ LIBRARY PREVIEW
-══════════════════════════════════════════ -->
+<!-- ══════════════ QUIZ PREVIEW ══════════════ -->
 <section id="quizzes" style="padding:0 24px 120px;">
   <div style="max-width:1280px;margin:0 auto;">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;" class="quiz-grid">
-      <div class="rev-l">
-        <div class="section-label">Quiz Library</div>
-        <h2 class="display" style="font-size:clamp(32px,4vw,56px);color:white;margin-bottom:18px;">1,500 exams.<br/><span class="grad-blue">Zero repetition.</span></h2>
-        <p style="color:var(--text-dim);font-size:15.5px;line-height:1.68;margin-bottom:30px;">Every quiz is engineered with strict answer variation — no predictable patterns, no repeated correct-answer streaks. The same intelligence you need for the real MCAT.</p>
-        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:34px;">
-          <div style="display:flex;align-items:center;gap:11px;"><div style="width:19px;height:19px;border-radius:50%;background:rgba(16,185,129,0.18);border:1px solid rgba(16,185,129,0.4);display:flex;align-items:center;justify-content:center;font-size:10.5px;flex-shrink:0;color:#34d399;">✓</div><span style="font-size:13.5px;color:var(--text-mid);">Auto-graded with 2nd and 3rd-order MCAT logic</span></div>
-          <div style="display:flex;align-items:center;gap:11px;"><div style="width:19px;height:19px;border-radius:50%;background:rgba(16,185,129,0.18);border:1px solid rgba(16,185,129,0.4);display:flex;align-items:center;justify-content:center;font-size:10.5px;flex-shrink:0;color:#34d399;">✓</div><span style="font-size:13.5px;color:var(--text-mid);">Detailed explanations with clinical correlates</span></div>
-          <div style="display:flex;align-items:center;gap:11px;"><div style="width:19px;height:19px;border-radius:50%;background:rgba(16,185,129,0.18);border:1px solid rgba(16,185,129,0.4);display:flex;align-items:center;justify-content:center;font-size:10.5px;flex-shrink:0;color:#34d399;">✓</div><span style="font-size:13.5px;color:var(--text-mid);">Scores feed directly into your adaptive profile</span></div>
-          <div style="display:flex;align-items:center;gap:11px;"><div style="width:19px;height:19px;border-radius:50%;background:rgba(16,185,129,0.18);border:1px solid rgba(16,185,129,0.4);display:flex;align-items:center;justify-content:center;font-size:10.5px;flex-shrink:0;color:#34d399;">✓</div><span style="font-size:13.5px;color:var(--text-mid);">Countdown timer with difficulty badges</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+      <div class="reveal-left">
+        <div style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:100px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:24px;">Quiz Library</div>
+        <h2 style="font-size:clamp(32px,4vw,56px);font-weight:900;letter-spacing:-.04em;line-height:1;margin-bottom:20px;">1,500 exams.<br/><span class="grad-blue">Zero repetition.</span></h2>
+        <p style="color:rgba(255,255,255,.45);font-size:16px;line-height:1.65;margin-bottom:32px;">Every quiz is engineered with strict answer variation — no predictable patterns, no repeated correct-answer streaks. The same intelligence you need for the real MCAT.</p>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:36px;">
+          <div style="display:flex;align-items:center;gap:12px;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(16,185,129,.2);border:1px solid rgba(16,185,129,.4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">✓</div><span style="font-size:14px;color:rgba(255,255,255,.6);">Auto-graded with 2nd and 3rd-order MCAT logic</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(16,185,129,.2);border:1px solid rgba(16,185,129,.4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">✓</div><span style="font-size:14px;color:rgba(255,255,255,.6);">Detailed explanations with clinical correlates</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(16,185,129,.2);border:1px solid rgba(16,185,129,.4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">✓</div><span style="font-size:14px;color:rgba(255,255,255,.6);">Scores feed directly into your adaptive profile</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(16,185,129,.2);border:1px solid rgba(16,185,129,.4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">✓</div><span style="font-size:14px;color:rgba(255,255,255,.6);">Countdown timer with difficulty badges</span></div>
         </div>
-        <button onclick="openAuth('signup')" class="btn btn-blue" style="padding:13px 30px;font-size:14px;">Access All 1,500 Quizzes →</button>
+        <button onclick="openAuth('signup')" class="btn-blue" style="padding:14px 32px;font-size:15px;">Access All Quizzes →</button>
       </div>
 
-      <div class="rev-r">
-        <div style="background:rgba(8,6,24,0.65);border:1px solid rgba(255,255,255,0.07);border-radius:22px;padding:26px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
-            <div class="display-sm" style="font-size:15px;color:white;">Quiz Library</div>
-            <div style="font-size:11.5px;color:var(--text-dim);">1,500 adaptive exams</div>
+      <div class="reveal-right">
+        <div style="background:rgba(8,8,20,.6);border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:28px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <div style="font-size:15px;font-weight:700;">Quiz Library</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.3);">1,500 exams</div>
           </div>
-          <div style="display:flex;gap:7px;margin-bottom:18px;flex-wrap:wrap;" id="catPills">
+          <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;" id="catPills">
             <div class="cat-pill active">All</div>
             <div class="cat-pill">Bio/Biochem</div>
             <div class="cat-pill">Chem/Phys</div>
             <div class="cat-pill">Psych/Soc</div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:9px;" id="quizList"></div>
+          <div style="display:flex;flex-direction:column;gap:10px;" id="quizList">
+            <!-- populated by JS -->
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     TESTIMONIALS
-══════════════════════════════════════════ -->
+<!-- ══════════════ TESTIMONIALS ══════════════ -->
 <section style="padding:0 24px 120px;">
-  <div style="max-width:1180px;margin:0 auto;">
-    <div class="rev" style="text-align:center;margin-bottom:60px;">
-      <h2 class="display" style="font-size:clamp(32px,4vw,56px);color:white;margin-bottom:14px;">Trusted by premeds<br/><span class="grad-blue">at top schools.</span></h2>
-      <p style="color:var(--text-dim);font-size:15.5px;">From first-generation students to legacy admits — the platform that levels the playing field.</p>
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;margin-bottom:64px;">
+      <h2 style="font-size:clamp(32px,4vw,56px);font-weight:900;letter-spacing:-.04em;margin-bottom:16px;">Trusted by premeds<br/><span class="grad-blue">at top schools.</span></h2>
+      <p style="color:rgba(255,255,255,.4);font-size:16px;">From first-generation students to legacy admits — the platform that levels the playing field.</p>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;" class="test-grid">
-      <div class="test-card rev" style="transition-delay:.05s;">
-        <div style="color:#f59e0b;font-size:13px;letter-spacing:2px;margin-bottom:14px;">★★★★★</div>
-        <p style="color:rgba(255,255,255,0.6);font-size:13.5px;line-height:1.74;margin-bottom:18px;">"The adaptive quiz engine is unlike anything I've used. It identified my weaknesses in Biochemistry and within 3 weeks I went from a 126 to a 130 in the Bio section. This app is the real deal."</p>
-        <div style="display:flex;align-items:center;gap:11px;">
-          <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:13px;flex-shrink:0;">S</div>
-          <div><div style="font-size:13px;font-weight:700;">Sarah K.</div><div style="font-size:10.5px;color:var(--text-dim);">Harvard Medical · Class of 2028</div></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <div class="test-card reveal" style="transition-delay:.05s;">
+        <div style="display:flex;gap:3px;margin-bottom:16px;">★★★★★</div>
+        <p style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.7;margin-bottom:20px;">"The adaptive quiz engine is unlike anything I've used. It identified my weaknesses in Biochemistry and within 3 weeks I went from a 126 to a 130 in the Bio section. This app is the real deal."</p>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;">S</div>
+          <div><div style="font-size:13px;font-weight:700;">Sarah K.</div><div style="font-size:11px;color:rgba(255,255,255,.3);">Harvard Medical School · Class of 2028</div></div>
         </div>
       </div>
-      <div class="test-card rev" style="transition-delay:.15s;border-color:rgba(59,130,246,0.18);">
-        <div style="color:#f59e0b;font-size:13px;letter-spacing:2px;margin-bottom:14px;">★★★★★</div>
-        <p style="color:rgba(255,255,255,0.6);font-size:13.5px;line-height:1.74;margin-bottom:18px;">"I tried Anki, Khan Academy, and every prep company out there. Nothing came close. The AI coach explained pharmacology in a way my professors never could. I got a 522 on my third attempt."</p>
-        <div style="display:flex;align-items:center;gap:11px;">
-          <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#10b981,#06b6d4);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:13px;flex-shrink:0;">M</div>
-          <div><div style="font-size:13px;font-weight:700;">Marcus T.</div><div style="font-size:10.5px;color:var(--text-dim);">Johns Hopkins · MCAT 522</div></div>
+      <div class="test-card reveal" style="transition-delay:.15s;border-color:rgba(59,130,246,.2);">
+        <div style="display:flex;gap:3px;margin-bottom:16px;">★★★★★</div>
+        <p style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.7;margin-bottom:20px;">"I tried Anki, Khan Academy, and every prep company out there. Nothing came close. The AI coach explained pharmacology in a way my professors never could. I got a 522 on my third attempt."</p>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#10b981,#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;">M</div>
+          <div><div style="font-size:13px;font-weight:700;">Marcus T.</div><div style="font-size:11px;color:rgba(255,255,255,.3);">Johns Hopkins · MCAT 522</div></div>
         </div>
       </div>
-      <div class="test-card rev" style="transition-delay:.25s;">
-        <div style="color:#f59e0b;font-size:13px;letter-spacing:2px;margin-bottom:14px;">★★★★★</div>
-        <p style="color:rgba(255,255,255,0.6);font-size:13.5px;line-height:1.74;margin-bottom:18px;">"The AMCAS vault saved me weeks of scrambling before the deadline. Having all my clinical hours automatically formatted was incredible. Every premed needs this app."</p>
-        <div style="display:flex;align-items:center;gap:11px;">
-          <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#ec4899);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:13px;flex-shrink:0;">A</div>
-          <div><div style="font-size:13px;font-weight:700;">Aisha R.</div><div style="font-size:10.5px;color:var(--text-dim);">Stanford Medicine · First-gen MD</div></div>
+      <div class="test-card reveal" style="transition-delay:.25s;">
+        <div style="display:flex;gap:3px;margin-bottom:16px;">★★★★★</div>
+        <p style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.7;margin-bottom:20px;">"The AMCAS vault saved me weeks of scrambling before the deadline. Having all my clinical hours automatically formatted was incredible. Every premed needs this app."</p>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#ec4899);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;">A</div>
+          <div><div style="font-size:13px;font-weight:700;">Aisha R.</div><div style="font-size:11px;color:rgba(255,255,255,.3);">Stanford Medicine · First-gen MD</div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     FINAL CTA
-══════════════════════════════════════════ -->
-<section style="padding:0 24px 128px;text-align:center;overflow:hidden;position:relative;">
-  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;height:500px;background:radial-gradient(ellipse at center,rgba(59,130,246,0.11) 0%,transparent 68%);pointer-events:none;"></div>
-  <div class="rev" style="position:relative;z-index:1;">
-    <h2 class="display" style="font-size:clamp(44px,8vw,100px);color:white;margin-bottom:40px;">
-      Study smarter.<br/><span class="grad-blue">Score higher.</span>
+<!-- ══════════════ FINAL CTA ══════════════ -->
+<section style="padding:0 24px 120px;text-align:center;overflow:hidden;position:relative;">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:400px;background:radial-gradient(ellipse at center,rgba(59,130,246,.12) 0%,transparent 70%);pointer-events:none;"></div>
+  <div class="reveal" style="position:relative;z-index:1;">
+    <h2 style="font-size:clamp(44px,8vw,100px);font-weight:900;letter-spacing:-.05em;line-height:.9;margin-bottom:40px;">
+      Study smarter.<br/><span class="grad-blue">Don't work harder.</span>
     </h2>
-    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;">
-      <button onclick="openAuth('signup')" class="btn btn-primary" style="font-size:18px;padding:17px 44px;">
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;">
+      <button onclick="openAuth('signup')" class="btn-primary" style="font-size:18px;padding:18px 44px;">
         Open Your Workspace
       </button>
-      <button onclick="openAuth('login')" class="btn btn-ghost" style="font-size:18px;padding:17px 44px;">
+      <button onclick="openAuth('login')" class="btn-outline" style="font-size:18px;padding:18px 44px;">
         Sign In
       </button>
     </div>
-    <p style="color:rgba(255,255,255,0.28);font-size:13.5px;font-weight:500;">Free forever. No credit card required. Join 20,000+ premeds.</p>
+    <p style="color:rgba(255,255,255,.3);font-size:14px;font-weight:500;">Free forever. No credit card required. Join 20,000+ premeds.</p>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     FOOTER
-══════════════════════════════════════════ -->
-<footer style="border-top:1px solid rgba(255,255,255,0.05);padding:52px 24px 36px;">
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer style="border-top:1px solid rgba(255,255,255,.05);padding:56px 24px 40px;">
   <div style="max-width:1280px;margin:0 auto;">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:40px;margin-bottom:52px;">
-      <div style="max-width:240px;">
-        <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
-          <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:white;">M</div>
-          <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;letter-spacing:-0.03em;">MedSchoolPrep</span>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:40px;margin-bottom:56px;">
+      <div style="max-width:260px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:white;">M</div>
+          <span style="font-weight:800;font-size:16px;">MedSchoolPrep</span>
         </div>
-        <p style="color:rgba(255,255,255,0.28);font-size:12.5px;line-height:1.65;">The everything app for premeds. Adaptive MCAT prep, AI coaching, and application tools — all synchronized.</p>
+        <p style="color:rgba(255,255,255,.3);font-size:13px;line-height:1.6;">The everything app for premeds. Adaptive MCAT prep, AI coaching, and application tools — all synchronized.</p>
       </div>
-      <div style="display:flex;gap:56px;flex-wrap:wrap;">
+      <div style="display:flex;gap:64px;flex-wrap:wrap;">
         <div>
-          <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:14px;">Product</div>
-          <div style="display:flex;flex-direction:column;gap:9px;">
-            <a href="#" style="font-size:12.5px;color:rgba(255,255,255,0.44);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.44)'">Features</a>
-            <a href="#" style="font-size:12.5px;color:rgba(255,255,255,0.44);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.44)'">Quiz Library</a>
-            <a href="#" style="font-size:12.5px;color:rgba(255,255,255,0.44);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.44)'">Pricing</a>
-            <a href="#" style="font-size:12.5px;color:rgba(255,255,255,0.44);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.44)'">Changelog</a>
+          <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:16px;">Product</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Features</a>
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Quiz Library</a>
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Pricing</a>
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Changelog</a>
           </div>
         </div>
         <div>
-          <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:14px;">Resources</div>
-          <div style="display:flex;flex-direction:column;gap:9px;">
-            <a href="#" style="font-size:12.5px;color:rgba(255,255,255,0.44);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.44)'">Blog</a>
-            <a href="#" style="font-size:12.5px;color:rgba(255,255,255,0.44);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.44)'">Study Guides</a>
-            <a href="#" style="font-size:12.5px;color:rgba(255,255,255,0.44);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.44)'">MCAT Roadmap</a>
-            <a href="#" style="font-size:12.5px;color:rgba(255,255,255,0.44);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.44)'">Community</a>
+          <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:16px;">Resources</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Blog</a>
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Study Guides</a>
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">MCAT Roadmap</a>
+            <a href="#" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Community</a>
           </div>
         </div>
       </div>
     </div>
-    <div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-      <span style="font-size:11.5px;color:rgba(255,255,255,0.18);">© 2025 MedSchoolPrep. All rights reserved.</span>
-      <div style="display:flex;gap:18px;">
-        <a href="#" style="font-size:11.5px;color:rgba(255,255,255,0.18);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='rgba(255,255,255,0.5)'" onmouseout="this.style.color='rgba(255,255,255,0.18)'">Privacy</a>
-        <a href="#" style="font-size:11.5px;color:rgba(255,255,255,0.18);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='rgba(255,255,255,0.5)'" onmouseout="this.style.color='rgba(255,255,255,0.18)'">Terms</a>
+    <div style="border-top:1px solid rgba(255,255,255,.05);padding-top:28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <span style="font-size:12px;color:rgba(255,255,255,.2);">© 2025 MedSchoolPrep. All rights reserved.</span>
+      <div style="display:flex;gap:20px;">
+        <a href="#" style="font-size:12px;color:rgba(255,255,255,.2);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='rgba(255,255,255,.5)'" onmouseout="this.style.color='rgba(255,255,255,.2)'">Privacy</a>
+        <a href="#" style="font-size:12px;color:rgba(255,255,255,.2);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='rgba(255,255,255,.5)'" onmouseout="this.style.color='rgba(255,255,255,.2)'">Terms</a>
       </div>
     </div>
   </div>
 </footer>
 
-<!-- ══════════════════════════════════════════
-     AUTH MODAL
-══════════════════════════════════════════ -->
+<!-- ══════════════ AUTH MODAL ══════════════ -->
 <div class="modal-bg" id="authModal">
-  <div class="modal-box" onclick="event.stopPropagation()">
-    <button onclick="closeAuth()" style="position:absolute;top:18px;right:18px;background:none;border:none;color:rgba(255,255,255,0.35);cursor:pointer;font-size:17px;transition:color .2s;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;" onmouseover="this.style.color='white';this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.color='rgba(255,255,255,0.35)';this.style.background='none'">✕</button>
+  <div style="width:100%;max-width:440px;background:#0b0f1a;border:1px solid rgba(255,255,255,.08);border-radius:28px;padding:44px;position:relative;margin:16px;" onclick="event.stopPropagation()">
+    <button onclick="closeAuth()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:18px;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.4)'">✕</button>
 
-    <div style="width:52px;height:52px;border-radius:15px;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:24px;color:white;margin-bottom:26px;box-shadow:0 0 36px rgba(59,130,246,0.4);">M</div>
+    <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:26px;color:white;margin-bottom:28px;box-shadow:0 0 40px rgba(59,130,246,.4);">M</div>
 
-    <!-- LOGIN -->
+    <!-- Views -->
     <div id="loginView">
-      <h2 class="display-sm" style="font-size:26px;color:white;margin-bottom:5px;">Welcome back.</h2>
-      <p style="color:var(--text-dim);margin-bottom:28px;font-size:13.5px;">Ready to continue your session?</p>
-      <div style="display:flex;flex-direction:column;gap:12px;">
+      <h2 style="font-size:28px;font-weight:900;margin-bottom:6px;letter-spacing:-.03em;">Welcome back.</h2>
+      <p style="color:rgba(255,255,255,.4);margin-bottom:32px;font-size:14px;">Ready to continue your session?</p>
+      <div style="display:flex;flex-direction:column;gap:14px;">
         <input class="modal-input" type="email" id="loginEmail" placeholder="Email address"/>
         <input class="modal-input" type="password" id="loginPass" placeholder="Password"/>
-        <div id="loginErr" style="font-size:12.5px;color:#f87171;display:none;padding:10px 14px;background:rgba(248,113,113,0.07);border-radius:10px;border:1px solid rgba(248,113,113,0.18);"></div>
-        <button onclick="doLogin()" class="btn btn-primary" style="padding:13px;font-size:15px;width:100%;justify-content:center;">Sign In</button>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;">
-          <button onclick="switchView('signup')" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:12.5px;transition:color .2s;font-family:'DM Sans',sans-serif;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-dim)'">Create account</button>
-          <button onclick="switchView('forgot')" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:12.5px;transition:color .2s;font-family:'DM Sans',sans-serif;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-dim)'">Forgot password?</button>
+        <div id="loginErr" style="font-size:13px;color:#f87171;display:none;padding:10px 14px;background:rgba(248,113,113,.08);border-radius:10px;border:1px solid rgba(248,113,113,.2);"></div>
+        <button onclick="doLogin()" class="btn-primary" style="padding:14px;font-size:15px;width:100%;">Sign In</button>
+        <div style="display:flex;justify-content:space-between;font-size:13px;">
+          <button onclick="switchView('signup')" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:13px;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.4)'">Create account</button>
+          <button onclick="switchView('forgot')" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:13px;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.4)'">Forgot password?</button>
         </div>
       </div>
     </div>
 
-    <!-- SIGNUP -->
     <div id="signupView" style="display:none;">
-      <h2 class="display-sm" style="font-size:26px;color:white;margin-bottom:5px;">Create account.</h2>
-      <p style="color:var(--text-dim);margin-bottom:28px;font-size:13.5px;">Start your journey to medical school today.</p>
-      <div style="display:flex;flex-direction:column;gap:12px;">
+      <h2 style="font-size:28px;font-weight:900;margin-bottom:6px;letter-spacing:-.03em;">Create account.</h2>
+      <p style="color:rgba(255,255,255,.4);margin-bottom:32px;font-size:14px;">Start your journey to medical school today.</p>
+      <div style="display:flex;flex-direction:column;gap:14px;">
         <input class="modal-input" type="text" id="signupName" placeholder="Full name"/>
         <input class="modal-input" type="email" id="signupEmail" placeholder="Email address"/>
         <input class="modal-input" type="password" id="signupPass" placeholder="Password (min 6 characters)"/>
         <input class="modal-input" type="password" id="signupPass2" placeholder="Confirm password"/>
-        <div id="signupErr" style="font-size:12.5px;color:#f87171;display:none;padding:10px 14px;background:rgba(248,113,113,0.07);border-radius:10px;border:1px solid rgba(248,113,113,0.18);"></div>
-        <div id="signupOk" style="font-size:12.5px;color:#34d399;display:none;padding:10px 14px;background:rgba(52,211,153,0.06);border-radius:10px;border:1px solid rgba(52,211,153,0.2);"></div>
-        <button onclick="doSignup()" class="btn btn-primary" style="padding:13px;font-size:15px;width:100%;justify-content:center;">Create Account</button>
-        <button onclick="switchView('login')" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:12.5px;transition:color .2s;font-family:'DM Sans',sans-serif;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-dim)'">Already have an account? Sign in</button>
+        <div id="signupErr" style="font-size:13px;color:#f87171;display:none;padding:10px 14px;background:rgba(248,113,113,.08);border-radius:10px;border:1px solid rgba(248,113,113,.2);"></div>
+        <div id="signupOk" style="font-size:13px;color:#34d399;display:none;padding:10px 14px;background:rgba(52,211,153,.06);border-radius:10px;border:1px solid rgba(52,211,153,.2);"></div>
+        <button onclick="doSignup()" class="btn-primary" style="padding:14px;font-size:15px;width:100%;">Create Account</button>
+        <button onclick="switchView('login')" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:13px;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.4)'">Already have an account? Sign in</button>
       </div>
     </div>
 
-    <!-- FORGOT -->
     <div id="forgotView" style="display:none;">
-      <h2 class="display-sm" style="font-size:26px;color:white;margin-bottom:5px;">Reset password.</h2>
-      <p style="color:var(--text-dim);margin-bottom:28px;font-size:13.5px;">We'll send a 6-digit code to your email.</p>
-      <div style="display:flex;flex-direction:column;gap:12px;">
+      <h2 style="font-size:28px;font-weight:900;margin-bottom:6px;letter-spacing:-.03em;">Reset password.</h2>
+      <p style="color:rgba(255,255,255,.4);margin-bottom:32px;font-size:14px;">We'll send a 6-digit code to your email.</p>
+      <div style="display:flex;flex-direction:column;gap:14px;">
         <input class="modal-input" type="email" id="forgotEmail" placeholder="Email address"/>
-        <div id="forgotCodeSection" style="display:none;flex-direction:column;gap:12px;">
-          <div style="font-size:12.5px;color:#34d399;padding:10px 14px;background:rgba(52,211,153,0.06);border-radius:10px;border:1px solid rgba(52,211,153,0.2);" id="forgotMsg"></div>
+        <div id="forgotCodeSection" style="display:none;flex-direction:column;gap:14px;">
+          <div style="font-size:13px;color:#34d399;padding:10px 14px;background:rgba(52,211,153,.06);border-radius:10px;border:1px solid rgba(52,211,153,.2);" id="forgotMsg"></div>
           <input class="modal-input" type="text" id="forgotCode" placeholder="Enter 6-digit code" maxlength="6"/>
           <input class="modal-input" type="password" id="forgotNewPass" placeholder="New password"/>
         </div>
-        <div id="forgotErr" style="font-size:12.5px;color:#f87171;display:none;padding:10px 14px;background:rgba(248,113,113,0.07);border-radius:10px;border:1px solid rgba(248,113,113,0.18);"></div>
-        <button onclick="doForgot()" id="forgotBtn" class="btn btn-primary" style="padding:13px;font-size:15px;width:100%;justify-content:center;">Send Reset Code</button>
-        <button onclick="switchView('login')" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:12.5px;font-family:'DM Sans',sans-serif;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-dim)'">← Back to sign in</button>
+        <div id="forgotErr" style="font-size:13px;color:#f87171;display:none;padding:10px 14px;background:rgba(248,113,113,.08);border-radius:10px;border:1px solid rgba(248,113,113,.2);"></div>
+        <button onclick="doForgot()" id="forgotBtn" class="btn-primary" style="padding:14px;font-size:15px;width:100%;">Send Reset Code</button>
+        <button onclick="switchView('login')" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:13px;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.4)'">← Back to sign in</button>
       </div>
     </div>
+
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     JAVASCRIPT
-══════════════════════════════════════════ -->
 <script>
-/* ────────────────────────────────
-   GRID MOUSE TRACKING
-──────────────────────────────── */
-const gridEl = document.getElementById('grid-canvas');
-let raf;
+// ── MOUSE GRID TRACKING ──
+const grid = document.getElementById('grid-canvas');
 document.addEventListener('mousemove', e => {
-  cancelAnimationFrame(raf);
-  raf = requestAnimationFrame(() => {
-    gridEl.style.setProperty('--mx', (e.clientX / window.innerWidth * 100).toFixed(1) + '%');
-    gridEl.style.setProperty('--my', (e.clientY / window.innerHeight * 100).toFixed(1) + '%');
-  });
+  const x = (e.clientX / window.innerWidth * 100).toFixed(1);
+  const y = (e.clientY / window.innerHeight * 100).toFixed(1);
+  grid.style.setProperty('--mx', x + '%');
+  grid.style.setProperty('--my', y + '%');
 });
 
-/* ────────────────────────────────
-   3D MOCKUP TILT
-──────────────────────────────── */
-const mock = document.getElementById('mockup3d');
-let mx = 0, my = 0;
+// ── 3D MOCKUP ──
+const mockup = document.getElementById('mockup3d');
 document.addEventListener('mousemove', e => {
-  const tx = ((window.innerWidth / 2 - e.clientX) / 70).toFixed(2);
-  const ty = ((e.clientY - window.innerHeight / 2) / 70).toFixed(2);
-  mx += (tx - mx) * 0.08;
-  my += (ty - my) * 0.08;
-  mock.style.transform = `rotateY(${mx}deg) rotateX(${-my}deg)`;
+  const xR = ((window.innerWidth / 2 - e.clientX) / 60).toFixed(2);
+  const yR = ((e.clientY - window.innerHeight / 2) / 60).toFixed(2);
+  mockup.style.transform = `rotateY(${xR}deg) rotateX(${-yR}deg)`;
 });
 
-/* ────────────────────────────────
-   SCROLL REVEAL
-──────────────────────────────── */
+// ── SCROLL REVEAL ──
 const ro = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
-}, { threshold: 0.07 });
-document.querySelectorAll('.rev,.rev-l,.rev-r').forEach(el => ro.observe(el));
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => ro.observe(el));
 
-/* ────────────────────────────────
-   NAV LINKS RESPONSIVE
-──────────────────────────────── */
-function setNav() {
-  document.getElementById('navLinks').style.display = window.innerWidth > 768 ? 'flex' : 'none';
+// ── NAV LINKS DESKTOP ──
+if (window.innerWidth > 768) {
+  document.getElementById('navLinks').style.display = 'flex';
 }
-setNav();
-window.addEventListener('resize', setNav);
+window.addEventListener('resize', () => {
+  document.getElementById('navLinks').style.display = window.innerWidth > 768 ? 'flex' : 'none';
+});
 
-/* ────────────────────────────────
-   MARQUEE
-──────────────────────────────── */
+// ── MARQUEE PILLS ──
 const topics = ['Glycolysis','Acid-Base Eq.','Newton\'s Laws','Cori Cycle','CARS Strategy','Stereochemistry','Nerve Impulse','MMI Prep','Krebs Cycle','Hardy-Weinberg','Electrochemistry','Protein Folding','Social Influence','Fluid Dynamics','DNA Replication','Cognitive Bias','Thermodynamics','Enzyme Kinetics','Memory Systems','AMCAS Essays','Organic Rxns','Cell Signaling','Hess\'s Law','Operant Cond.'];
-const mColors = [
-  ['rgba(59,130,246,0.11)','rgba(59,130,246,0.3)','#93c5fd'],
-  ['rgba(16,185,129,0.09)','rgba(16,185,129,0.28)','#6ee7b7'],
-  ['rgba(139,92,246,0.09)','rgba(139,92,246,0.28)','#c4b5fd'],
-  ['rgba(249,115,22,0.09)','rgba(249,115,22,0.28)','#fb923c'],
-  ['rgba(6,182,212,0.09)','rgba(6,182,212,0.28)','#67e8f9'],
-];
+const colors = ['rgba(59,130,246,.12)','rgba(16,185,129,.1)','rgba(139,92,246,.1)','rgba(249,115,22,.1)','rgba(6,182,212,.1)'];
+const tcolors = ['#93c5fd','#6ee7b7','#c4b5fd','#fb923c','#67e8f9'];
 function buildMarquee(id) {
   const el = document.getElementById(id);
-  topics.forEach((t, i) => {
-    const c = mColors[i % mColors.length];
+  topics.forEach((t,i) => {
     const d = document.createElement('div');
-    d.style.cssText = `padding:8px 18px;border-radius:100px;border:1px solid ${c[1]};background:${c[0]};font-size:12.5px;font-weight:600;color:${c[2]};white-space:nowrap;font-family:'DM Sans',sans-serif;`;
+    const ci = i % colors.length;
+    d.style.cssText = `padding:8px 18px;border-radius:100px;border:1px solid rgba(255,255,255,0.08);background:${colors[ci]};font-size:13px;font-weight:600;color:${tcolors[ci]};white-space:nowrap;`;
     d.textContent = t;
     el.appendChild(d);
   });
@@ -1090,9 +756,7 @@ function buildMarquee(id) {
 buildMarquee('marq1');
 buildMarquee('marq2');
 
-/* ────────────────────────────────
-   QUIZ LIST
-──────────────────────────────── */
+// ── QUIZ LIST PREVIEW ──
 const quizSamples = [
   { title:'Glycolysis & Regulation', cat:'Bio/Biochem', diff:'Hard', qs:15, score:null },
   { title:'Acid-Base Equilibria', cat:'Chem/Phys', diff:'Hard', qs:15, score:84 },
@@ -1100,33 +764,27 @@ const quizSamples = [
   { title:'TCA Cycle & ETC', cat:'Bio/Biochem', diff:'Hard', qs:15, score:71 },
   { title:'Thermodynamics', cat:'Chem/Phys', diff:'Hard', qs:15, score:null },
 ];
-const diffStyle = {
-  Hard:   { bg:'rgba(239,68,68,0.13)', color:'#f87171' },
-  Medium: { bg:'rgba(245,158,11,0.12)', color:'#fbbf24' },
-  Easy:   { bg:'rgba(16,185,129,0.11)', color:'#34d399' },
-};
+const diffColors = { Hard:'rgba(239,68,68,.15)', Medium:'rgba(245,158,11,.15)', Easy:'rgba(16,185,129,.12)' };
+const diffText = { Hard:'#f87171', Medium:'#fbbf24', Easy:'#34d399' };
 const ql = document.getElementById('quizList');
 quizSamples.forEach(q => {
   const d = document.createElement('div');
-  d.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:11px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.055);gap:10px;transition:background .2s,border-color .25s;cursor:pointer;';
-  d.onmouseover = () => { d.style.background='rgba(59,130,246,0.07)'; d.style.borderColor='rgba(59,130,246,0.2)'; };
-  d.onmouseout  = () => { d.style.background='rgba(255,255,255,0.025)'; d.style.borderColor='rgba(255,255,255,0.055)'; };
-  const ds = diffStyle[q.diff];
+  d.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);gap:12px;transition:background .2s;cursor:pointer;';
+  d.onmouseover = () => d.style.background = 'rgba(59,130,246,0.08)';
+  d.onmouseout = () => d.style.background = 'rgba(255,255,255,0.03)';
   d.innerHTML = `
     <div style="flex:1;min-width:0;">
-      <div style="font-size:13px;font-weight:600;color:white;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:-0.01em;">${q.title}</div>
-      <div style="font-size:10.5px;color:rgba(255,255,255,0.3);margin-top:2px;">${q.cat} · ${q.qs} questions</div>
+      <div style="font-size:13px;font-weight:700;color:white;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${q.title}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:2px;">${q.cat} · ${q.qs} questions</div>
     </div>
-    <div style="display:flex;align-items:center;gap:7px;flex-shrink:0;">
-      <span style="padding:3px 9px;border-radius:20px;font-size:10.5px;font-weight:700;background:${ds.bg};color:${ds.color};">${q.diff}</span>
-      ${q.score
-        ? `<span style="font-size:12px;font-weight:700;color:#34d399;">${q.score}%</span>`
-        : `<button onclick="openAuth('signup')" style="padding:5px 12px;border-radius:20px;background:rgba(59,130,246,0.18);border:1px solid rgba(59,130,246,0.3);color:#93c5fd;font-size:10.5px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Start →</button>`
-      }
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+      <span style="padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;background:${diffColors[q.diff]};color:${diffText[q.diff]};">${q.diff}</span>
+      ${q.score ? `<span style="font-size:12px;font-weight:700;color:#34d399;">${q.score}%</span>` : `<button onclick="openAuth('signup')" style="padding:5px 12px;border-radius:20px;background:rgba(59,130,246,.2);border:1px solid rgba(59,130,246,.3);color:#93c5fd;font-size:11px;font-weight:700;cursor:pointer;">Start</button>`}
     </div>`;
   ql.appendChild(d);
 });
 
+// ── CATEGORY PILLS ──
 document.querySelectorAll('.cat-pill').forEach(p => {
   p.addEventListener('click', () => {
     document.querySelectorAll('.cat-pill').forEach(x => x.classList.remove('active'));
@@ -1134,464 +792,7 @@ document.querySelectorAll('.cat-pill').forEach(p => {
   });
 });
 
-/* ════════════════════════════════════════
-   SPECIALTY PATH DIAGNOSTIC ENGINE
-════════════════════════════════════════ */
-
-const SPECIALTIES = [
-  { id:'surgery',           name:'Surgery',            emoji:'🔪', quizzes:210, units:3,
-    color:'#3b82f6', colorRgb:'59,130,246' },
-  { id:'internal',          name:'Internal Med.',       emoji:'🩺', quizzes:245, units:4,
-    color:'#10b981', colorRgb:'16,185,129' },
-  { id:'cardiology',        name:'Cardiology',          emoji:'🫀', quizzes:188, units:3,
-    color:'#f43f5e', colorRgb:'244,63,94' },
-  { id:'neurology',         name:'Neurology',           emoji:'🧠', quizzes:196, units:3,
-    color:'#8b5cf6', colorRgb:'139,92,246' },
-  { id:'psychiatry',        name:'Psychiatry',          emoji:'💭', quizzes:174, units:3,
-    color:'#6366f1', colorRgb:'99,102,241' },
-  { id:'pediatrics',        name:'Pediatrics',          emoji:'👶', quizzes:162, units:3,
-    color:'#f59e0b', colorRgb:'245,158,11' },
-  { id:'emergency',         name:'Emergency Med.',      emoji:'🚨', quizzes:178, units:3,
-    color:'#f97316', colorRgb:'249,115,22' },
-  { id:'obgyn',             name:'OB/GYN',              emoji:'🌸', quizzes:147, units:3,
-    color:'#ec4899', colorRgb:'236,72,153' },
-];
-
-// Full path data per specialty
-const PATH_DATA = {
-  surgery: {
-    totalQuizzes: 210,
-    units: [
-      {
-        title: 'Surgical Anatomy', num: 'UNIT 1',
-        complete: 2, total: 4,
-        nodes: [
-          { type:'lesson',   title:'Body Cavities & Fascial Planes',     meta:'~18 min read',                 status:'mastered',  pips:[1,1,1,1] },
-          { type:'practice', title:'Anatomy Foundations Quiz · 25 Qs',   meta:'3 of 4 required to pass',      status:'mastered',  pips:[1,1,1,1] },
-          { type:'lesson',   title:'Vascular Supply & Lymphatics',        meta:'~22 min read',                 status:'progress',  pips:[1,1,0,0] },
-          { type:'practice', title:'Vascular Access Quiz · 30 Qs',        meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-        ]
-      },
-      {
-        title: 'Perioperative Medicine', num: 'UNIT 2',
-        complete: 0, total: 3,
-        nodes: [
-          { type:'lesson',   title:'ASA Classification & Risk Scoring',   meta:'~20 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'Pre-op Assessment Quiz · 20 Qs',      meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'Unit Mastery Challenge',               meta:'Unlock after all lessons',     status:'locked',    pips:[0,0,0,0] },
-        ]
-      },
-      {
-        title: 'Surgical Pharmacology', num: 'UNIT 3',
-        complete: 0, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Anesthetic Agents & Mechanisms',      meta:'~25 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'Anesthesia Quiz · 35 Qs',             meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'Path Completion Badge',                meta:'Final unit assessment',        status:'locked',    pips:[0,0,0,0] },
-        ]
-      }
-    ]
-  },
-  internal: {
-    totalQuizzes: 245,
-    units: [
-      {
-        title: 'Cardiopulmonary Systems', num: 'UNIT 1',
-        complete: 3, total: 4,
-        nodes: [
-          { type:'lesson',   title:'Cardiac Cycle & Pressure-Volume',     meta:'~20 min read',                 status:'mastered',  pips:[1,1,1,1] },
-          { type:'practice', title:'Cardiology Fundamentals · 30 Qs',     meta:'3 of 4 required to pass',      status:'mastered',  pips:[1,1,1,1] },
-          { type:'lesson',   title:'Pulmonary Mechanics & Gas Exchange',   meta:'~22 min read',                 status:'mastered',  pips:[1,1,1,0] },
-          { type:'practice', title:'Pulmonology Quiz · 25 Qs',            meta:'3 of 4 required to pass',      status:'progress',  pips:[1,0,0,0] },
-        ]
-      },
-      {
-        title: 'GI & Hepatobiliary', num: 'UNIT 2',
-        complete: 0, total: 4,
-        nodes: [
-          { type:'lesson',   title:'GI Physiology & Absorption',          meta:'~18 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'GI Pathology Quiz · 35 Qs',           meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'lesson',   title:'Liver Disease & Portal Hypertension',  meta:'~20 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'GI Unit Mastery Check',                meta:'Covers all GI topics',         status:'locked',    pips:[0,0,0,0] },
-        ]
-      },
-      {
-        title: 'Endocrinology & Metabolism', num: 'UNIT 3',
-        complete: 0, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Thyroid & Adrenal Axes',              meta:'~24 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'Endocrine Quiz · 40 Qs',              meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'Path Completion Badge',                meta:'Final assessment',             status:'locked',    pips:[0,0,0,0] },
-        ]
-      }
-    ]
-  },
-  cardiology: {
-    totalQuizzes: 188,
-    units: [
-      {
-        title: 'Cardiac Electrophysiology', num: 'UNIT 1',
-        complete: 1, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Action Potentials & Ion Channels',    meta:'~20 min read',                 status:'mastered',  pips:[1,1,1,1] },
-          { type:'practice', title:'Electrophysiology Quiz · 25 Qs',      meta:'3 of 4 required to pass',      status:'progress',  pips:[1,1,0,0] },
-          { type:'lesson',   title:'ECG Interpretation Masterclass',      meta:'~30 min read',                 status:'locked',    pips:[0,0,0,0] },
-        ]
-      },
-      {
-        title: 'Structural Heart Disease', num: 'UNIT 2',
-        complete: 0, total: 4,
-        nodes: [
-          { type:'lesson',   title:'Valvular Disease & Murmurs',          meta:'~22 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'Structural Cardiology Quiz · 30 Qs',  meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'lesson',   title:'Heart Failure & Cardiomyopathy',      meta:'~20 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'Unit Mastery Challenge',               meta:'Covers all structural topics', status:'locked',    pips:[0,0,0,0] },
-        ]
-      },
-      {
-        title: 'Pharmacologic Cardiology', num: 'UNIT 3',
-        complete: 0, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Antiarrhythmics & Beta-Blockers',     meta:'~24 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'Cardio Pharm Quiz · 35 Qs',           meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'Cardiology Path Badge',                meta:'Final assessment',             status:'locked',    pips:[0,0,0,0] },
-        ]
-      }
-    ]
-  },
-  neurology: {
-    totalQuizzes: 196,
-    units: [
-      {
-        title: 'Neuroanatomy & Pathways', num: 'UNIT 1',
-        complete: 2, total: 4,
-        nodes: [
-          { type:'lesson',   title:'Cortical Lobes & Functional Areas',   meta:'~25 min read',                 status:'mastered',  pips:[1,1,1,1] },
-          { type:'practice', title:'Neuroanatomy Quiz · 30 Qs',           meta:'3 of 4 required to pass',      status:'mastered',  pips:[1,1,1,1] },
-          { type:'lesson',   title:'Cranial Nerves Deep Dive',            meta:'~22 min read',                 status:'progress',  pips:[1,0,0,0] },
-          { type:'practice', title:'Cranial Nerve Quiz · 25 Qs',          meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-        ]
-      },
-      {
-        title: 'Stroke & Vascular Neurology', num: 'UNIT 2',
-        complete: 0, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Ischemic Stroke Syndromes',           meta:'~20 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'Stroke Neurology Quiz · 30 Qs',       meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'Vascular Neurology Mastery Check',    meta:'Covers all stroke content',    status:'locked',    pips:[0,0,0,0] },
-        ]
-      },
-      {
-        title: 'Neuropharmacology', num: 'UNIT 3',
-        complete: 0, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Receptor Pharmacology & Neurotrans.', meta:'~22 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'Neuropharmacology Quiz · 40 Qs',      meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'Neurology Path Completion',            meta:'Final assessment',             status:'locked',    pips:[0,0,0,0] },
-        ]
-      }
-    ]
-  },
-  psychiatry: {
-    totalQuizzes: 174,
-    units: [
-      {
-        title: 'Psychopathology', num: 'UNIT 1',
-        complete: 1, total: 3,
-        nodes: [
-          { type:'lesson',   title:'DSM-5 Diagnostic Criteria Overview',  meta:'~18 min read',                 status:'mastered',  pips:[1,1,1,1] },
-          { type:'practice', title:'Psychopathology Quiz · 25 Qs',        meta:'3 of 4 required to pass',      status:'progress',  pips:[1,1,0,0] },
-          { type:'lesson',   title:'Mood & Anxiety Disorders',            meta:'~20 min read',                 status:'locked',    pips:[0,0,0,0] },
-        ]
-      },
-      {
-        title: 'Psychopharmacology', num: 'UNIT 2',
-        complete: 0, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Antidepressants: Mechanisms & SE',    meta:'~22 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'Psychopharmacology Quiz · 30 Qs',     meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'Pharmacology Mastery Check',          meta:'Covers all drug classes',      status:'locked',    pips:[0,0,0,0] },
-        ]
-      },
-      {
-        title: 'Clinical Interview & Ethics', num: 'UNIT 3',
-        complete: 0, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Therapeutic Alliance & Frameworks',   meta:'~16 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'Clinical Reasoning Quiz · 25 Qs',     meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'Psychiatry Path Badge',                meta:'Final assessment',             status:'locked',    pips:[0,0,0,0] },
-        ]
-      }
-    ]
-  },
-  pediatrics: {
-    totalQuizzes: 162,
-    units: [
-      {
-        title: 'Developmental Milestones', num: 'UNIT 1',
-        complete: 2, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Motor, Social & Cognitive Growth',    meta:'~18 min read',                 status:'mastered',  pips:[1,1,1,1] },
-          { type:'practice', title:'Developmental Milestones Quiz · 20 Qs',meta:'3 of 4 required to pass',    status:'mastered',  pips:[1,1,1,0] },
-          { type:'lesson',   title:'Immunization Schedules & Safety',     meta:'~15 min read',                 status:'progress',  pips:[1,0,0,0] },
-        ]
-      },
-      {
-        title: 'Pediatric Pulmonology', num: 'UNIT 2',
-        complete: 0, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Asthma, RSV & Croup Comparison',     meta:'~20 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'Pediatric Pulm Quiz · 30 Qs',         meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'Pediatric Pulm Mastery Check',        meta:'Covers all respiratory topics',status:'locked',    pips:[0,0,0,0] },
-        ]
-      },
-      {
-        title: 'Pediatric Emergencies', num: 'UNIT 3',
-        complete: 0, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Febrile Seizures & Meningitis',       meta:'~22 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'Pediatric Emergency Quiz · 35 Qs',    meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'Pediatrics Path Completion',           meta:'Final assessment',             status:'locked',    pips:[0,0,0,0] },
-        ]
-      }
-    ]
-  },
-  emergency: {
-    totalQuizzes: 178,
-    units: [
-      {
-        title: 'Resuscitation & Airway', num: 'UNIT 1',
-        complete: 1, total: 3,
-        nodes: [
-          { type:'lesson',   title:'ACLS Algorithms & Pharmacology',      meta:'~24 min read',                 status:'mastered',  pips:[1,1,1,1] },
-          { type:'practice', title:'Resuscitation Quiz · 30 Qs',          meta:'3 of 4 required to pass',      status:'progress',  pips:[1,1,0,0] },
-          { type:'lesson',   title:'RSI & Difficult Airway Management',   meta:'~20 min read',                 status:'locked',    pips:[0,0,0,0] },
-        ]
-      },
-      {
-        title: 'Trauma Management', num: 'UNIT 2',
-        complete: 0, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Primary & Secondary ATLS Survey',     meta:'~22 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'Trauma Quiz · 35 Qs',                 meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'Trauma Mastery Challenge',             meta:'Covers all ATLS content',      status:'locked',    pips:[0,0,0,0] },
-        ]
-      },
-      {
-        title: 'Toxicology & Antidotes', num: 'UNIT 3',
-        complete: 0, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Overdose Toxidromes & Recognition',   meta:'~20 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'Toxicology Quiz · 30 Qs',             meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'EM Path Completion Badge',             meta:'Final assessment',             status:'locked',    pips:[0,0,0,0] },
-        ]
-      }
-    ]
-  },
-  obgyn: {
-    totalQuizzes: 147,
-    units: [
-      {
-        title: 'Reproductive Physiology', num: 'UNIT 1',
-        complete: 2, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Menstrual Cycle & Hormonal Axes',     meta:'~18 min read',                 status:'mastered',  pips:[1,1,1,1] },
-          { type:'practice', title:'Reproductive Physiology Quiz · 25 Qs',meta:'3 of 4 required to pass',     status:'mastered',  pips:[1,1,1,1] },
-          { type:'lesson',   title:'Fertilization & Early Embryology',    meta:'~20 min read',                 status:'progress',  pips:[1,1,0,0] },
-        ]
-      },
-      {
-        title: 'Obstetric Complications', num: 'UNIT 2',
-        complete: 0, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Preeclampsia, Eclampsia & HELLP',    meta:'~22 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'High-Risk OB Quiz · 30 Qs',           meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'Obstetrics Mastery Check',            meta:'Covers all OB complications',  status:'locked',    pips:[0,0,0,0] },
-        ]
-      },
-      {
-        title: 'Gynecologic Oncology', num: 'UNIT 3',
-        complete: 0, total: 3,
-        nodes: [
-          { type:'lesson',   title:'Cervical & Ovarian Cancer Pathways',  meta:'~20 min read',                 status:'locked',    pips:[0,0,0,0] },
-          { type:'practice', title:'Gyn Oncology Quiz · 25 Qs',           meta:'3 of 4 required to pass',      status:'locked',    pips:[0,0,0,0] },
-          { type:'mastery',  title:'OB/GYN Path Completion Badge',         meta:'Final assessment',             status:'locked',    pips:[0,0,0,0] },
-        ]
-      }
-    ]
-  }
-};
-
-/* ── BUILD SPECIALTY CARDS ── */
-let selectedSpec = null;
-
-function buildSpecGrid() {
-  const grid = document.getElementById('specGrid');
-  SPECIALTIES.forEach(s => {
-    const card = document.createElement('div');
-    card.className = 'spec-card';
-    card.id = 'spec-' + s.id;
-    card.style.setProperty('--spec-color', s.color);
-    card.style.setProperty('--spec-glow', `radial-gradient(circle at 50% 50%, rgba(${s.colorRgb},0.12), transparent 70%)`);
-    card.innerHTML = `
-      <span class="spec-emoji">${s.emoji}</span>
-      <span class="spec-name">${s.name}</span>
-      <span class="spec-meta">${s.quizzes} quizzes · ${s.units} units</span>`;
-    card.onclick = () => selectSpecialty(s.id);
-    grid.appendChild(card);
-  });
-}
-
-/* ── SELECT SPECIALTY & RENDER PATH ── */
-function selectSpecialty(id) {
-  // Save to localStorage immediately
-  localStorage.setItem('msp_user_path', id);
-
-  // Update card selection state
-  SPECIALTIES.forEach(s => {
-    const card = document.getElementById('spec-' + s.id);
-    if (s.id === id) card.classList.add('selected');
-    else card.classList.remove('selected');
-  });
-
-  const spec = SPECIALTIES.find(s => s.id === id);
-  const pathData = PATH_DATA[id];
-  if (!pathData) return;
-
-  selectedSpec = id;
-
-  // Animate out
-  const wrap = document.getElementById('pathTreeWrap');
-  const placeholder = document.getElementById('pathPlaceholder');
-  const treeEl = document.getElementById('pathTree');
-
-  wrap.style.opacity = '0';
-  wrap.style.transform = 'translateX(-10px)';
-
-  setTimeout(() => {
-    placeholder.style.display = 'none';
-    treeEl.style.display = 'block';
-    treeEl.innerHTML = renderPathTree(spec, pathData);
-
-    wrap.style.transition = 'opacity 0.4s, transform 0.4s cubic-bezier(0.16,1,0.3,1)';
-    wrap.style.opacity = '1';
-    wrap.style.transform = 'translateX(0)';
-
-    // Stagger node animations
-    const nodes = treeEl.querySelectorAll('.path-node');
-    nodes.forEach((n, i) => {
-      n.style.opacity = '0';
-      n.style.transform = 'translateX(-10px)';
-      setTimeout(() => {
-        n.style.transition = 'opacity 0.35s ease, transform 0.35s cubic-bezier(0.16,1,0.3,1)';
-        n.style.opacity = n.classList.contains('locked') ? '0.38' : '1';
-        n.style.transform = 'translateX(0)';
-      }, 60 + i * 48);
-    });
-  }, 220);
-
-  wrap.style.transition = 'opacity 0.22s, transform 0.22s';
-}
-
-/* ── RENDER PATH TREE HTML ── */
-function renderPathTree(spec, data) {
-  const c = spec.color;
-  const cr = SPECIALTIES.find(s=>s.id===spec.id).colorRgb;
-
-  let html = `
-    <!-- Path header -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.06);">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <div style="width:36px;height:36px;border-radius:10px;background:rgba(${cr},0.15);border:1px solid rgba(${cr},0.3);display:flex;align-items:center;justify-content:center;font-size:18px;">${spec.emoji}</div>
-        <div>
-          <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:white;letter-spacing:-0.03em;">${spec.name} Learning Path</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.35);">${data.totalQuizzes} adaptive quizzes · ${data.units.length} units · Mastery-gated</div>
-        </div>
-      </div>
-      <div style="font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;background:rgba(${cr},0.12);border:1px solid rgba(${cr},0.25);color:${c};">Preview</div>
-    </div>`;
-
-  // Render each unit
-  data.units.forEach((unit, ui) => {
-    html += `
-      <div class="path-unit-block" style="--unit-color:${c};--unit-color-border:rgba(${cr},0.25);--unit-color-bg:rgba(${cr},0.07);">
-        <div class="path-unit-header">
-          <span class="path-unit-num">${unit.num}</span>
-          <span class="path-unit-title">${unit.title}</span>
-          <span class="path-unit-badge">${unit.complete}/${unit.total} complete</span>
-        </div>
-        <div class="path-nodes" style="--unit-color:${c};">`;
-
-    unit.nodes.forEach((node, ni) => {
-      const isLocked   = node.status === 'locked';
-      const isMastered = node.status === 'mastered';
-      const isProgress = node.status === 'progress';
-
-      // dot class
-      let dotClass = `node-dot ${node.type}`;
-      if (isLocked)   dotClass = 'node-dot nd-locked';
-      if (isMastered) dotClass = 'node-dot nd-mastered';
-
-      // dot content
-      const dotContent = isLocked ? '🔒' : isMastered ? '✓' : '';
-
-      // pips html
-      const pipsHtml = node.pips.map(p => `<div class="pip ${p===1?'filled':'empty'}"></div>`).join('');
-
-      // status label
-      let statusLabel = 'Not started';
-      if (isMastered) statusLabel = '<span style="color:#10b981;font-weight:700;">Mastered</span>';
-      else if (isProgress) statusLabel = `<span style="color:${c};font-weight:700;">In Progress</span>`;
-      else if (isLocked) statusLabel = '<span style="color:rgba(255,255,255,0.25);">Locked</span>';
-
-      // onclick for non-locked nodes
-      const clickAttr = !isLocked ? `onclick="openAuth('signup')" style="cursor:pointer;"` : '';
-
-      html += `
-          <div class="path-node${isLocked?' locked':''}" ${clickAttr}>
-            <div class="${dotClass}" style="font-size:9px;color:${isMastered?'#10b981':isLocked?'rgba(255,255,255,0.25)':c};">${dotContent}</div>
-            <div style="flex:1;min-width:0;">
-              <div class="node-type-badge ${node.type}">${node.type.toUpperCase()}</div>
-              <div class="node-title">${node.title}</div>
-              <div class="node-meta">${node.meta}</div>
-            </div>
-            <div style="flex-shrink:0;text-align:right;">
-              <div class="mastery-pips">${pipsHtml}</div>
-              <div class="mastery-req">${statusLabel}</div>
-            </div>
-          </div>`;
-    });
-
-    html += `</div></div>`;
-
-    // Gap between units
-    if (ui < data.units.length - 1) {
-      html += `<div style="height:6px;"></div>`;
-    }
-  });
-
-  // CTA bar
-  html += `
-    <div class="path-cta-bar" style="border-color:rgba(${cr},0.22);background:rgba(${cr},0.05);">
-      <div class="path-cta-text"><strong style="color:${c};">Your path is ready.</strong> Begin with Unit 1 and the engine adapts to every answer you give.</div>
-      <button onclick="openAuth('signup')" style="padding:10px 22px;border-radius:100px;background:${c};color:white;border:none;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:all 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Begin Path →</button>
-    </div>`;
-
-  return html;
-}
-
-/* ── INIT ── */
-buildSpecGrid();
-
-// Restore previously selected path
-const savedPath = localStorage.getItem('msp_user_path');
-if (savedPath && PATH_DATA[savedPath]) {
-  setTimeout(() => selectSpecialty(savedPath), 300);
-}
-
-/* ════════════════════════════════════════
-   AUTH SYSTEM (preserved + enhanced)
-════════════════════════════════════════ */
+// ── AUTH ──
 function hashPw(s) {
   let h = 5381;
   for (let i = 0; i < s.length; i++) h = ((h << 5) + h) + s.charCodeAt(i) | 0;
@@ -1600,12 +801,10 @@ function hashPw(s) {
 
 function openAuth(view) {
   document.getElementById('authModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
   switchView(view);
 }
 function closeAuth() {
   document.getElementById('authModal').classList.remove('open');
-  document.body.style.overflow = '';
 }
 document.getElementById('authModal').addEventListener('click', e => {
   if (e.target === document.getElementById('authModal')) closeAuth();
@@ -1634,22 +833,24 @@ function clearErrors() {
 function doLogin() {
   clearErrors();
   const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-  const pass  = document.getElementById('loginPass').value;
+  const pass = document.getElementById('loginPass').value;
   if (!email.includes('@')) return showErr('loginErr', 'Please enter a valid email address.');
   if (!pass) return showErr('loginErr', 'Please enter your password.');
   const users = JSON.parse(localStorage.getItem('msp_users') || '{}');
-  const user  = users[email];
+  const user = users[email];
   if (!user || user.hash !== hashPw(pass)) return showErr('loginErr', 'Incorrect email or password.');
   localStorage.setItem('msp_session', JSON.stringify({ email, name: user.name, at: Date.now() }));
   closeAuth();
-  window.location.reload();
+  window.location.href = 'src/main.jsx' in window ? './src/main.jsx' : './index.html#app';
+  // For the actual app, redirect to the React app
+  window.location.href = './';
 }
 
 function doSignup() {
   clearErrors();
-  const name  = document.getElementById('signupName').value.trim();
+  const name = document.getElementById('signupName').value.trim();
   const email = document.getElementById('signupEmail').value.trim().toLowerCase();
-  const pass  = document.getElementById('signupPass').value;
+  const pass = document.getElementById('signupPass').value;
   const pass2 = document.getElementById('signupPass2').value;
   if (!name) return showErr('signupErr', 'Please enter your full name.');
   if (!email.includes('@')) return showErr('signupErr', 'Please enter a valid email address.');
@@ -1660,68 +861,70 @@ function doSignup() {
   users[email] = { name, hash: hashPw(pass), created: Date.now() };
   localStorage.setItem('msp_users', JSON.stringify(users));
   localStorage.setItem('msp_session', JSON.stringify({ email, name, at: Date.now() }));
-  const ok = document.getElementById('signupOk');
-  ok.textContent = `Welcome, ${name}! Account created. Redirecting to your workspace...`;
-  ok.style.display = 'block';
-  setTimeout(() => { closeAuth(); window.location.reload(); }, 1400);
+  document.getElementById('signupOk').textContent = `Welcome, ${name}! Account created. Redirecting...`;
+  document.getElementById('signupOk').style.display = 'block';
+  setTimeout(() => {
+    closeAuth();
+    window.location.reload();
+  }, 1400);
 }
 
 let forgotCode = null;
 function doForgot() {
   clearErrors();
-  const email    = document.getElementById('forgotEmail').value.trim().toLowerCase();
-  const codeInp  = document.getElementById('forgotCode').value.trim();
-  const newPass  = document.getElementById('forgotNewPass').value;
-  const btn      = document.getElementById('forgotBtn');
-  const codeSec  = document.getElementById('forgotCodeSection');
+  const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+  const codeInput = document.getElementById('forgotCode').value.trim();
+  const newPass = document.getElementById('forgotNewPass').value;
+  const btn = document.getElementById('forgotBtn');
+  const codeSection = document.getElementById('forgotCodeSection');
 
   if (!forgotCode) {
-    if (!email.includes('@')) return showErr('forgotErr','Please enter a valid email address.');
+    if (!email.includes('@')) return showErr('forgotErr', 'Please enter a valid email address.');
     const users = JSON.parse(localStorage.getItem('msp_users') || '{}');
-    if (!users[email]) return showErr('forgotErr','No account found with this email.');
+    if (!users[email]) return showErr('forgotErr', 'No account found with this email.');
     forgotCode = Math.floor(100000 + Math.random() * 900000).toString();
     localStorage.setItem('msp_reset_' + email, JSON.stringify({ code: forgotCode, exp: Date.now() + 15 * 60 * 1000 }));
-    codeSec.style.display = 'flex';
+    codeSection.style.display = 'flex';
     document.getElementById('forgotMsg').textContent = `Code generated (demo): ${forgotCode}`;
     btn.textContent = 'Reset Password';
     return;
   }
 
   const stored = JSON.parse(localStorage.getItem('msp_reset_' + email) || 'null');
-  if (!stored || stored.code !== codeInp) return showErr('forgotErr','Invalid code. Please try again.');
-  if (Date.now() > stored.exp) { forgotCode = null; return showErr('forgotErr','Code expired. Please request a new one.'); }
-  if (newPass.length < 6) return showErr('forgotErr','Password must be at least 6 characters.');
+  if (!stored || stored.code !== codeInput) return showErr('forgotErr', 'Invalid code. Please try again.');
+  if (Date.now() > stored.exp) { forgotCode = null; return showErr('forgotErr', 'Code expired. Please request a new one.'); }
+  if (newPass.length < 6) return showErr('forgotErr', 'Password must be at least 6 characters.');
   const users = JSON.parse(localStorage.getItem('msp_users') || '{}');
   users[email].hash = hashPw(newPass);
   localStorage.setItem('msp_users', JSON.stringify(users));
   localStorage.removeItem('msp_reset_' + email);
   forgotCode = null;
-  codeSec.style.display = 'none';
+  codeSection.style.display = 'none';
+  document.getElementById('forgotMsg').textContent = '';
   btn.textContent = 'Send Reset Code';
   const ok = document.getElementById('forgotErr');
-  ok.style.cssText = 'font-size:12.5px;color:#34d399;display:block;padding:10px 14px;background:rgba(52,211,153,0.06);border-radius:10px;border:1px solid rgba(52,211,153,0.2);';
+  ok.style.cssText = 'font-size:13px;color:#34d399;display:block;padding:10px 14px;background:rgba(52,211,153,.06);border-radius:10px;border:1px solid rgba(52,211,153,.2);';
   ok.textContent = 'Password updated! You can now sign in.';
   setTimeout(() => switchView('login'), 1500);
 }
 
-// ESC to close
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuth(); });
+// ── ESC TO CLOSE ──
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeAuth();
+});
 
-// Check existing session — personalise CTAs
+// ── CHECK EXISTING SESSION ──
 const sess = localStorage.getItem('msp_session');
 if (sess) {
   try {
     const s = JSON.parse(sess);
     if (s && s.name) {
-      const first = s.name.split(' ')[0];
-      document.querySelectorAll('[onclick="openAuth(\'signup\')"]').forEach(b => {
-        if (b.textContent.includes('Start') || b.textContent.includes('Open') || b.textContent.includes('Access')) {
-          b.textContent = `Continue as ${first} →`;
-        }
-      });
+      const btns = document.querySelectorAll('[onclick="openAuth(\'signup\')"]');
+      btns.forEach(b => { b.textContent = `Continue as ${s.name.split(' ')[0]} →`; });
     }
   } catch(e) {}
 }
 </script>
+
 </body>
 </html>
