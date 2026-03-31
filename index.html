@@ -1093,25 +1093,104 @@ function doSignup(){
   document.getElementById('signupOk').style.display='block';
   setTimeout(()=>{closeAuth();window.location.reload();},1400);
 }
-let forgotCode=null;
-function doForgot(){
+let forgotCode = null;
+
+// This version is ASYNC so it can talk to your Vercel/Gmail backend
+async function doForgot() {
   clearErrors();
-  const email=document.getElementById('forgotEmail').value.trim().toLowerCase();
-  const codeInp=document.getElementById('forgotCode').value.trim();
-  const newPass=document.getElementById('forgotNewPass').value;
-  const btn=document.getElementById('forgotBtn');
-  const sec=document.getElementById('forgotCodeSection');
-  if(!forgotCode){
-    if(!email.includes('@')) return showErr('forgotErr','Please enter a valid email address.');
-    const users=JSON.parse(localStorage.getItem('msp_users')||'{}');
-    if(!users[email]) return showErr('forgotErr','No account found with this email.');
-    forgotCode=Math.floor(100000+Math.random()*900000).toString();
-    localStorage.setItem('msp_reset_'+email,JSON.stringify({code:forgotCode,exp:Date.now()+15*60*1000}));
-    sec.style.display='flex';
-    document.getElementById('forgotMsg').textContent=`Code generated (demo): ${forgotCode}`;
-    btn.textContent='Reset Password';
+  const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+  const codeInp = document.getElementById('forgotCode').value.trim();
+  const newPass = document.getElementById('forgotNewPass').value;
+  const btn = document.getElementById('forgotBtn');
+  const sec = document.getElementById('forgotCodeSection');
+  const errEl = document.getElementById('forgotErr');
+
+  // STEP 1: Generate OTP and send via Backend
+  if (!forgotCode) {
+    if (!email.includes('@')) return showErr('forgotErr', 'Please enter a valid email address.');
+    
+    const users = JSON.parse(localStorage.getItem('msp_users') || '{}');
+    if (!users[email]) return showErr('forgotErr', 'No account found with this email.');
+
+    // Generate 6-digit OTP
+    forgotCode = Math.floor(100000 + Math.random() * 900000).toString();
+    localStorage.setItem('msp_reset_' + email, JSON.stringify({
+      code: forgotCode,
+      exp: Date.now() + 15 * 60 * 1000 // 15 min expiry
+    }));
+
+    // UI Loading State
+    btn.textContent = 'Sending OTP...';
+    btn.disabled = true;
+    btn.style.opacity = "0.5";
+
+    try {
+      // CALL YOUR VERCEL API (api/ai.js)
+      const response = await fetch('/api/ai', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system: "You are an automated email dispatcher.",
+          message: `SEND_EMAIL_TASK: To: ${email} | Subject: MedSchoolPrep Reset Code | Body: Your code is: ${forgotCode}`
+        })
+      });
+
+      if (!response.ok) throw new Error('Failed to send');
+
+      // Success: Show the input fields
+      sec.style.display = 'flex';
+      document.getElementById('forgotMsg').textContent = `Verification code sent to ${email}`;
+      btn.textContent = 'Verify & Reset';
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      
+    } catch (error) {
+      console.error('Email Error:', error);
+      forgotCode = null; // Reset so they can try again
+      btn.textContent = 'Send Reset Code';
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      return showErr('forgotErr', 'Failed to send email. Try again later.');
+    }
     return;
   }
+
+  // STEP 2: Verify the OTP and update password
+  const stored = JSON.parse(localStorage.getItem('msp_reset_' + email) || 'null');
+  
+  if (!stored || stored.code !== codeInp) {
+    return showErr('forgotErr', 'Invalid code. Check your email.');
+  }
+  
+  if (Date.now() > stored.exp) {
+    forgotCode = null;
+    sec.style.display = 'none';
+    return showErr('forgotErr', 'Code expired. Request a new one.');
+  }
+  
+  if (newPass.length < 6) {
+    return showErr('forgotErr', 'New password must be at least 6 characters.');
+  }
+
+  // Update LocalStorage "Database"
+  const users = JSON.parse(localStorage.getItem('msp_users') || '{}');
+  users[email].hash = hashPw(newPass);
+  localStorage.setItem('msp_users', JSON.stringify(users));
+  
+  // Cleanup
+  localStorage.removeItem('msp_reset_' + email);
+  forgotCode = null;
+  sec.style.display = 'none';
+  
+  // Success Feedback
+  errEl.style.display = 'block';
+  errEl.style.color = '#34d399';
+  errEl.textContent = 'Password updated! Redirecting to login...';
+
+  setTimeout(() => {
+    switchView('login');
+  }, 2000);
+}
   const stored=JSON.parse(localStorage.getItem('msp_reset_'+email)||'null');
   if(!stored||stored.code!==codeInp) return showErr('forgotErr','Invalid code. Please try again.');
   if(Date.now()>stored.exp){forgotCode=null;return showErr('forgotErr','Code expired. Please request a new one.');}
