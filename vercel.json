@@ -1,5 +1,7 @@
 {
   "version": 2,
+  "buildCommand": "",
+  "outputDirectory": ".",
   "routes": [
     { "src": "/api/sendEmail", "dest": "/api/sendEmail.js" },
     { "src": "/(.*)",          "dest": "/index.html" }
