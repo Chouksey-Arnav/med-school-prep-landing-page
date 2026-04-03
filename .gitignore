@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Environment Variables (CRITICAL: Keeps your Gmail password safe!)
+.env
+.env.*
+!.env.example
+
+# Vercel Local Cache
+.vercel/
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
